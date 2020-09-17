@@ -40,7 +40,9 @@ class annoncesService{
 
   //AJOUT DE PRODUITS A LA BASE DE DONNEES
   static Future<String> addProduit(String idadmin, String admincontact,String intitule_bien, String type_bien,String type_mandat,String superficie,String pays,
-      String ville,String quartier,String description, String prix, String negoce,String nbetage,String nbpiece,String nbchambre,String nbsallebain,String nbtoilvisiteur,String nbsallesejour,File imageFile,File imageFile2,File imageFile3,File imageFile4,String user ) async{
+      String ville,String quartier,String description, String prix, String negoce,String situationadministrative,String nbetage,String nbsalon,String nbchambre,String nbcuisine,String nbsalledebain,String newconstruire,
+     String dependance,String garage,String piscine,String jardin, String toilettevisiteur,String 	debarras,String compteurperso,String arrierecours,String 	balcon,String meuble,String ascensseur,
+      File imageFile,File imageFile2,File imageFile3,File imageFile4,String user ) async{
     try{
       String nom1="";
       String nom2="";
@@ -164,12 +166,24 @@ class annoncesService{
       map['description']= description;
       map['prix']= prix;
       map['negoce']= negoce;
-      map['nbetage']= nbetage;
-      map['nbpiece']= nbpiece;
+      map['situationadministrative']= situationadministrative;
+      map['nbetage']=nbetage;
+      map['nbsalon']= nbsalon;
       map['nbchambre']= nbchambre;
-      map['nbsallebain']= nbsallebain;
-      map['nbtoilvisiteur']= nbtoilvisiteur;
-      map['nbsallesejour']= nbsallesejour;
+      map['nbcuisine']= nbcuisine;
+      map['nbsalledebain']=  nbsalledebain;
+      map['newconstruire']=  newconstruire;
+      map['dependance']=  dependance;
+      map['garage']=  garage;
+      map['piscine']=  piscine;
+      map['jardin']=  jardin;
+      map['toilettevisiteur']=  toilettevisiteur;
+      map['debarras']=  debarras;
+      map['compteurperso']=  compteurperso;
+      map['arrierecours']=  arrierecours;
+      map['balcon']=  	balcon;
+      map['meuble']= meuble;
+      map['ascensseur']=  ascensseur;
       map['image1']= nom1;
       map['image2']= nom2;
       map['image3']= nom3;
@@ -416,7 +430,7 @@ class Userservices{
       map['contact']= contact;
       map['representantId']=representantId;
       final response4 = await http.post('https://gerestock.com/immo/localisation.php',body:map);
-      print('Voici le message du body addProduit: ${response4.body}');
+      print('Voici le message du body AddUser: ${response4.body}');
       if(200 == response4.statusCode){
         return response4.body;
       }else{
@@ -552,6 +566,67 @@ class Mandatservices{
 
 }
 
+class TypeBienservices{
+  static const ROOT ='https://gerestock.com/immo/localisation.php';
+  static const _GET_QUARTIER_ACTION= 'GET_MANDAT';
+
+  static Future<List<Mandat>> getMandat() async {
+    try{
+      var map= Map<String, dynamic>();
+      map['action']= _GET_QUARTIER_ACTION;
+
+      final response = await http.post(ROOT,body:map);
+      print('Voici le message du body getQuartier: ${response.body}');
+      if(200 == response.statusCode){
+        List<Mandat> list = parseResponse(response.body);
+        return list;
+      }else{
+        return List<Mandat>();
+      }
+    }
+    catch(e){
+
+      return List<Mandat>();
+    }
+  }
+  static List<Mandat> parseResponse(String responseBody){
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Mandat>((json) => Mandat.fromJson(json)).toList();
+  }
+
+}
+
+class Bienservices{
+  static const ROOT ='https://gerestock.com/immo/localisation.php';
+  static const _GET_QUARTIER_ACTION= 'GET_LOUER';
+
+  static Future<List<Bienlouable>> getLouer() async {
+    try{
+      var map= Map<String, dynamic>();
+      map['action']= _GET_QUARTIER_ACTION;
+
+      final response = await http.post(ROOT,body:map);
+      print('Voici le message du body getQuartier: ${response.body}');
+      if(200 == response.statusCode){
+        List<Bienlouable> list = parseResponse(response.body);
+        return list;
+      }else{
+        return List<Bienlouable>();
+      }
+    }
+    catch(e){
+
+      return List<Bienlouable>();
+    }
+  }
+
+  static List<Bienlouable> parseResponse(String responseBody){
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Bienlouable>((json) => Bienlouable.fromJson(json)).toList();
+  }
+
+}
+
 class Etageservices{
   static const ROOT ='https://gerestock.com/immo/localisation.php';
   static const _GET_QUARTIER_ACTION= 'GET_ETAGE';
@@ -578,6 +653,67 @@ class Etageservices{
   static List<Etage> parseResponse(String responseBody){
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed.map<Etage>((json) => Etage.fromJson(json)).toList();
+  }
+
+}
+
+class CodePaysservices{
+  static const ROOT ='https://gerestock.com/immo/localisation.php';
+  static const _GET_QUARTIER_ACTION= 'GET_CODEPAYS';
+
+  static Future<List<codePays>> getCode() async {
+    try{
+      var map= Map<String, dynamic>();
+      map['action']= _GET_QUARTIER_ACTION;
+
+      final response = await http.post(ROOT,body:map);
+      print('Voici le message du body getQuartier: ${response.body}');
+      if(200 == response.statusCode){
+        List<codePays> list = parseResponse(response.body);
+        return list;
+      }else{
+        return List<codePays>();
+      }
+    }
+    catch(e){
+
+      return List<codePays>();
+    }
+  }
+  static List<codePays> parseResponse(String responseBody){
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<codePays>((json) => codePays.fromJson(json)).toList();
+  }
+
+}
+
+
+class Situationservices{
+  static const ROOT ='https://gerestock.com/immo/localisation.php';
+  static const _GET_QUARTIER_ACTION= 'GET_SITUATION';
+
+  static Future<List<Situationadmin>> getSituationadmin() async {
+    try{
+      var map= Map<String, dynamic>();
+      map['action']= _GET_QUARTIER_ACTION;
+
+      final response = await http.post(ROOT,body:map);
+      print('Voici le message du body getSituationadmin: ${response.body}');
+      if(200 == response.statusCode){
+        List<Situationadmin> list = parseResponse(response.body);
+        return list;
+      }else{
+        return List<Situationadmin>();
+      }
+    }
+    catch(e){
+
+      return List<Situationadmin>();
+    }
+  }
+  static List<Situationadmin> parseResponse(String responseBody){
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Situationadmin>((json) => Situationadmin.fromJson(json)).toList();
   }
 
 }

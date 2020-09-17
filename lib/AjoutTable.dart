@@ -151,49 +151,7 @@ class _AjoutTable extends State<AjoutTable>{
        ),
      ),
     );
-    type_mandatController = textHolder;
-    negoceController = textHolder2;
-    annoncesService.addProduit(
-        widget.user.id,
-        widget.user.contact,
-        intitule_bienController.text,
-        type_bienController.text,
-        type_mandatController,
-        superficieController.text,
-        paysController.text,
-        villeController.text,
-        quartierController.text,
-        descriptionController.text,
-        prixController.text,
-        negoceController,
-        nbetagecontroller.text,
-        nbpiececontroller.text,
-        nbchambrecontroller.text,
-        nbsallebaincontroller.text,
-        nbtoilvisiteurcontroller.text,
-        nbsallesejourcontroller.text,
-        _image1,
-        _image2,
-        _image3,
-        _image4,
-        widget.user.pseudo).then((result) {
-      if ("Succès" == result) {
-        _getAnnonce();
-        Navigator.pop(context);
-        succes();
-        _clearValues();
-        setState(() {
-          _image1 = null;
-          _image2 = null;
-          _image3 = null;
-          _image4= null;
-        });
-      }
-      else {
-        Navigator.pop(context);
-        echec("Oups! Nous avons rencontrer un problème, vérifiez votre connexion et réessayez");
-      }
-    });
+
   }
 
   _getMandat(){

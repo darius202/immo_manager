@@ -107,6 +107,20 @@ class Ville{
     );
   }
 }
+
+class codePays{
+  String id;
+  String idPays;
+  String code;
+  codePays({this.id,this.idPays,this.code});
+  factory codePays.fromJson(Map<String, dynamic> json){
+    return codePays(
+      id:json['id'] as String,
+      idPays:json['idPays'] as String,
+      code:json['code'] as String,
+    );
+  }
+}
 class Quartier{
 
   String  codequartier;
@@ -164,3 +178,40 @@ class Etage{
     );
   }
 }
+class Bienlouable {
+  String id;
+  String bien;
+
+  Bienlouable({this.id, this.bien});
+
+  factory Bienlouable.fromJson(Map<String, dynamic> json) {
+    return Bienlouable(
+      id: json['id'] as String,
+      bien: json['bien'] as String,
+    );
+  }
+}
+
+class Situationadmin {
+  String id;
+  String situation;
+
+  Situationadmin({this.id, this.situation});
+
+  factory Situationadmin.fromJson(Map<String, dynamic> json) {
+    return Situationadmin(
+      id: json['id'] as String,
+      situation: json['situation'] as String,
+    );
+  }
+}
+
+List <Situationadmin> situation= List();
+List <User> user= List();
+List <Pays> pays;
+List <Ville> ville;
+List <Quartier> quartier;
+List <Mandat> mandat;
+List <Etage> etage;
+List <codePays> code;
+List <Bienlouable> louable;

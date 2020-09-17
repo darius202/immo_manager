@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:immo_manager/constants.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:immo_manager/services/Services.dart';
-import 'package:immo_manager/DataTables.dart';
+import 'package:immo_manager/transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:immo_manager/login.dart';
 
@@ -13,11 +14,10 @@ class Sigin extends StatefulWidget{
 }
 
 class _Sigin extends State<Sigin> {
-
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   TextEditingController pseudocontroller;
   TextEditingController mailcontroller;
   TextEditingController passcontroller;
-  TextEditingController contactcontroller;
   TextEditingController payscontroller;
   TextEditingController villecontroller;
   TextEditingController quartiercontroller;
@@ -47,7 +47,6 @@ class _Sigin extends State<Sigin> {
     pseudocontroller = TextEditingController();
     mailcontroller = TextEditingController();
     passcontroller = TextEditingController();
-    contactcontroller = TextEditingController();
     payscontroller = TextEditingController();
     villecontroller = TextEditingController();
     quartiercontroller = TextEditingController();
@@ -58,25 +57,32 @@ class _Sigin extends State<Sigin> {
     _getQuartier();
   }
 
+  Future<void> _handleSubmit(BuildContext context) async {
+    try {
+      Dialogs.showLoadingDialog(context, _keyLoader);//invoking login
+      Navigator.of(_keyLoader.currentContext,rootNavigator: true).pop();//close the dialoge
+    } catch (error) {
+      print(error);
+    }
+  }
 
   _getVille(){
-    Villeservices.getVille().then((value) {
-      _ville=value;
-      filtreVille = value;
+    setState(() {
+      _ville=ville;
+      filtreVille = ville;
     });
   }
   _getPays(){
-    Paysservices.getPays().then((value) {
-      _pays =value;
+    setState(() {
+      _pays =pays;
     });
   }
   final String emailPattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
   _getQuartier(){
-    Quartierservices.getQuartier().then((value) {
-      _quartier= value;
-      filtreQuartier=value;
-      print(_quartier.length);
+    setState(() {
+      _quartier= quartier;
+      filtreQuartier=quartier;
     });
   }
 
@@ -91,417 +97,343 @@ class _Sigin extends State<Sigin> {
   }
 
   void _onLoading() {
-    if( !mailcontroller.text.contains("@gmail.com",0) ){
-      mail("  Veuillez renseigner un email valide svp");
-      return;
-    }
-    else if(pseudocontroller.text.isEmpty){
-      mail("  Veuillez renseigner un nom d'utilisateur svp");
-      return;
-    }
-    else if(passcontroller.text.isEmpty){
-      mail("  Veuillez choisir un mot de passe svp");
-      return;
-    }
-    else if( payscontroller.text.isEmpty){
-      mail("  Veuillez choisir un pays svp");
-      return;
-    }
-    else if( villecontroller.text.isEmpty){
-      mail("  Veuillez choisir une ville svp");
-      return;
-    }
-    else if( quartiercontroller.text.isEmpty){
-      mail("  Veuillez choisir un quartier svp");
-      return;
-    }
-    else if( contactcontroller.text.isEmpty){
-      mail("  Veuillez renseigner un contact WhatsApp svp");
-      return;
-    }else {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        child: Container(
-          margin: EdgeInsets.all(30.0),
-          padding: EdgeInsets.all(10.0),
-          child: new Dialog(
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                new CircularProgressIndicator(),
-                new Text("Attendez Svp"),
-              ],
-            ),
-          ),
-        ),
-      );
-      Userservices.addUser(
-          pseudocontroller.text,
-          mailcontroller.text,
-          passcontroller.text,
-          payscontroller.text,
-          villecontroller.text,
-          quartiercontroller.text,
-          contactcontroller.text,
-          representantcontroller.text).then((value) {
-        if ("Succès" == value) {
-          Navigator.pop(context);
-          SavePass();
-          SaveEmail();
-          echec();
-        }
-      });
-    }
+    _handleSubmit(context);
+    Userservices.addUser(
+        pseudocontroller.text,
+        mailcontroller.text,
+        passcontroller.text,
+        payscontroller.text,
+        villecontroller.text,
+        quartiercontroller.text,
+        contactcode+contactcontroller.text,
+        representantcontroller.text).then((value) {
+      if ("1" == value) {
+        Navigator.pop(context);
+        SavePass();
+        SaveEmail();
+        echec();
+      }else{
+        Navigator.pop(context);
+        mailUsed();
+      }
+    });
   }
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset : false,
       appBar: AppBar(
-        centerTitle: true,
+        elevation: 0.0,
         backgroundColor: Colors.white,
-        title: Text(_titreProgress,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.blue)),
-        leading: Image.asset('assets/wimmo.jpg',fit: BoxFit.contain,),
-        actions: [
-          GestureDetector(
-            child: Container(
-              padding: EdgeInsets.only(top: 20.0),
-              child: Text("Se connecter",style: TextStyle(color: Colors.blueGrey)),
-            ),
-            onTap: (){
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context){
-                      return new Login();
-                    },
-                  )
-              );
-            },
-          ),
-        ],
+        title: Image.asset('assets/wimmo.jpg',fit: BoxFit.contain,
+          height: 200,
+          width: 200,),
+        centerTitle: true,
       ),
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset : false,
       body: SingleChildScrollView(
-            child:  Container(
-              child: Form(
-                  key:_formKey,
-                  child: Column(
-                    children: [
-                      Container(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 1.1,
-                        padding: EdgeInsets.all(20.0),
-                        child: TextFormField(
-                          controller: pseudocontroller,
-                          autocorrect: true,
-                          decoration: InputDecoration(
-                            hintText: 'Login',
-                            prefixIcon: Icon(Icons.person, color: Colors.blueGrey),
-                            hintStyle: TextStyle(color: Colors.grey),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Entrer un nom valid svp';
-                            }
-                            return null;
-                          },
-                        ),
+        child:  Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Form(
+              key:_formKey,
+              child: Column(
+                children: [
+                  Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 1.1,
+                    padding: EdgeInsets.only(top:20.0,left:20.0,right: 20.0),
+                    child: TextFormField(
+                      controller: pseudocontroller,
+                      autocorrect: true,
+                      decoration: InputDecoration(
+                        hintText:  "Nom de l'agence ou de l'agent",
+                        hintStyle: TextStyle(color: Colors.grey),
+                        filled: true,
+                        fillColor: Colors.white,
                       ),
-                      Container(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 1.1,
-                        padding: EdgeInsets.only(left:20.0,right: 20.0),
-                        child: TextFormField(
-                            controller: mailcontroller,
-                            autocorrect: true,
-                            decoration: InputDecoration(
-                              hintText: 'email',
-                              prefixIcon: Icon(Icons.email, color: Colors.blueGrey),
-                              hintStyle: TextStyle(color: Colors.grey),
-                              filled: true,
-                              fillColor: Colors.white,
-                            ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Veuillez saisir votre adresse email';
-                            }
-                            RegExp regExp = new RegExp(emailPattern);
-                            if (!regExp.hasMatch(value)) {
-                              return "Veuillez saisir une adresse email valide.";
-                            }
-                          },
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 1.1,
-                        padding: EdgeInsets.all(20.0),
-                        child: TextFormField(
-                            controller: passcontroller,
-                            autocorrect: true,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              hintText: 'Mot de passe',
-                              prefixIcon: Icon(Icons.lock, color: Colors.blueGrey),
-                              hintStyle: TextStyle(color: Colors.grey),
-                              filled: true,
-                              fillColor: Colors.white,
-                            ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Entrer un mot de passe';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 1.1,
-                        padding: EdgeInsets.all(20.0),
-                        child: TextFormField(
-                          autocorrect: true,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'Entrer à nouveau votre mot de passe',
-                            prefixIcon: Icon(Icons.lock, color: Colors.blueGrey),
-                            hintStyle: TextStyle(color: Colors.grey),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty||value!=passcontroller.text) {
-                              return 'Mot de passe incorrecte';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 1.1,
-                        padding: EdgeInsets.all(20.0),
-                        child: FormField(
-                          builder: (FormFieldState state) {
-                            return InputDecorator(
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                hintText: "Choisissez un pays",
-                                prefixIcon: Icon(Icons.edit_location, color: Colors.blueGrey),
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                              isEmpty: _paysselected == '',
-                              child: new DropdownButtonHideUnderline(
-                                child:ButtonTheme(
-                                  alignedDropdown: true,
-                                  padding: EdgeInsets.all(10.0),
-                                  child: DropdownButton(
-                                    isDense: true,
-                                    value: _paysselected.isNotEmpty ? _paysselected : null,
-                                    onChanged: (String newValue){
-                                      setState(() {
-                                        int index =int.parse(newValue);
-                                        payscontroller.text=_pays[index-1].intitulepays;
-                                        _paysselected=newValue;
-                                        _villeselected ="";
-                                        _quartierselected="";
-                                        filtreVille = _ville.where((element) =>
-                                        (element.codepays.toLowerCase().contains(newValue.toLowerCase()))
-                                        ).toList();
-                                      });
-                                      print(_paysselected);
-                                    },
-                                    items: _pays.map((Pays map){
-                                      return new DropdownMenuItem(
-                                        value: map.codepays,
-                                        child: Text(map.intitulepays),
-                                      );
-                                    }
-                                    ).toList(),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 1.1,
-                        padding: EdgeInsets.all(20.0),
-                        child: FormField(
-                          builder: (FormFieldState state) {
-                            return InputDecorator(
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                hintText: "Choisissez une ville",
-                                prefixIcon: Icon(Icons.location_city, color: Colors.blueGrey),
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                              isEmpty: _villeselected == '',
-                              child: new DropdownButtonHideUnderline(
-                                child:ButtonTheme(
-                                  alignedDropdown: true,
-                                  child: DropdownButton(
-                                    isDense: true,
-                                    value: _villeselected.isNotEmpty ? _villeselected : null,
-                                    onChanged: (String newValue){
-                                      setState(() {
-                                        if(_paysselected!=""){
-                                          _quartierselected ="";
-                                          _villeselected=newValue;
-                                          int index= int.parse(newValue);
-                                          villecontroller.text = _ville[index-1].intituleville;
-                                          representantcontroller.text=_ville[index-1].representantId;
-
-                                          filtreQuartier = _quartier.where((element) =>
-                                          (element.codeville.toLowerCase().contains(newValue.toLowerCase()))
-                                          ).toList();
-                                        }else{
-                                          _villeselected="";
-                                          _quartierselected="";
-                                        }
-
-                                      });
-                                    },
-                                    items: filtreVille.map((Ville map){
-                                      return new DropdownMenuItem(
-                                        value: map.codeville,
-                                        child: Text(map.intituleville),
-                                      );
-                                    }
-                                    ).toList(),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-
-                      Container(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 1.1,
-                        padding: EdgeInsets.all(20.0),
-                        child: FormField(
-                          builder: (FormFieldState state) {
-                            return InputDecorator(
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                hintText: "Choisissez un quartier",
-                                prefixIcon: Icon(Icons.my_location, color: Colors.blueGrey),
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                              isEmpty: _quartierselected == '',
-                              child: new DropdownButtonHideUnderline(
-                                child:ButtonTheme(
-                                  alignedDropdown: true,
-                                  child: DropdownButton(
-                                    isDense: true,
-                                    value: _quartierselected.isNotEmpty ? _quartierselected : null,
-                                    onChanged: (String newValue){
-                                      setState(() {
-                                        if(_villeselected!=""){
-                                          _quartierselected=newValue;
-                                          int index=int.parse(newValue);
-                                          quartiercontroller.text= _quartier[index-1].intitulequartier;
-                                        }else{
-                                          _villeselected="";
-                                        }
-                                      });
-                                      print(" Akassato: ${newValue}");
-                                    },
-                                    items: filtreQuartier.map((Quartier map){
-                                      return new DropdownMenuItem(
-                                        value: map.codequartier,
-                                        child: Text(map.intitulequartier),
-                                      );
-                                    }
-                                    ).toList(),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 1.1,
-                        padding: EdgeInsets.all(20.0),
-                        child: TextFormField(
-                            controller: contactcontroller,
-                            keyboardType: TextInputType.number,
-                            autocorrect: true,
-                            decoration: InputDecoration(
-                              hintText: "+229...",
-                              prefixIcon: Icon(Icons.phone, color: Colors.blueGrey),
-                              hintStyle: TextStyle(color: Colors.grey),
-                              filled: true,
-                              fillColor: Colors.white,
-                            ),
-                          validator: (value) {
-                            if (value.isEmpty || value.length<8) {
-                              return 'Entrer un numero valid';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      Card(
-                        elevation: 7.0,
-                        child: Container(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width / 1.3,
-                          decoration: new BoxDecoration(
-                            color: Colors.blueGrey,
-                            border: new Border.all(color: Colors.white, width: 2.0),
-                            borderRadius: new BorderRadius.circular(10.0),),
-                          child: FlatButton(
-                            onPressed: (){
-                              setState(() {
-                                if (_formKey.currentState.validate()) {
-                                  _onLoading();
-                                }
-                              });
-                            },
-                            child: Text("Créer mon compte",
-                              style: TextStyle(color: Colors.white, fontSize: 18),),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 14.0,),
-                      Text(message,style: TextStyle(color: Colors.red),),
-                      SizedBox(height: 95.0,),
-                    ],
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Entrer un nom correcte svp';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
-                ),
+                  SizedBox(height: 5,),
+                  Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 1.1,
+                    padding: EdgeInsets.only(left:20.0,right: 20.0),
+                    child: TextFormField(
+                      controller: mailcontroller,
+                      autocorrect: true,
+                      decoration: InputDecoration(
+                        hintText: 'Email',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Veuillez saisir votre adresse mail';
+                        }
+                        RegExp regExp = new RegExp(emailPattern);
+                        if (!regExp.hasMatch(value)) {
+                          return "Veuillez saisir un adresse mail valide.";
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 5,),
+                  Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 1.1,
+                    padding: EdgeInsets.only(left:20.0,right: 20.0),
+                    child: TextFormField(
+                      controller: passcontroller,
+                      autocorrect: true,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: 'Mot de passe',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Entrer un mot de passe';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 5,),
+                  Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 1.1,
+                    padding: EdgeInsets.only(left:20.0,right: 20.0),
+                    child: TextFormField(
+                      autocorrect: true,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: 'Confirmation du mot de passe',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty||value!=passcontroller.text) {
+                          return 'Mot de passe incorrecte';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 5,),
+                  Container(
+                    padding: EdgeInsets.only(left:40.0,right: 40.0),
+                    child: FormField(
+                      builder: (FormFieldState state) {
+                        return InputDecorator(
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: "Pays",
+                            hintStyle: TextStyle(color: Colors.grey),
+                          ),
+                          isEmpty: _paysselected == '',
+                          child: new DropdownButtonHideUnderline(
+                            child:ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton(
+                                isDense: true,
+                                value: _paysselected.isNotEmpty ? _paysselected : null,
+                                onChanged: (String newValue){
+                                  setState(() {
+                                    int index =int.parse(newValue);
+                                    payscontroller.text=_pays[index-1].intitulepays;
+                                    _paysselected=newValue;
+                                    _villeselected ="";
+                                    _quartierselected="";
+                                    filtreVille = _ville.where((element) =>
+                                    (element.codepays.toLowerCase().contains(newValue.toLowerCase()))
+                                    ).toList();
+                                  });
+                                  print(_paysselected);
+                                },
+                                items: _pays.map((Pays map){
+                                  return new DropdownMenuItem(
+                                    value: map.codepays,
+                                    child: Text(map.intitulepays),
+                                  );
+                                }
+                                ).toList(),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 5,),
+                  Container(
+                    padding: EdgeInsets.only(left:40.0,right: 40.0),
+                    child: FormField(
+                      builder: (FormFieldState state) {
+                        return InputDecorator(
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: "Ville",
+                            hintStyle: TextStyle(color: Colors.grey),
+                          ),
+                          isEmpty: _villeselected == '',
+                          child: new DropdownButtonHideUnderline(
+                            child:ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton(
+                                isDense: true,
+                                value: _villeselected.isNotEmpty ? _villeselected : null,
+                                onChanged: (String newValue){
+                                  setState(() {
+                                    if(_paysselected!=""){
+                                      _quartierselected ="";
+                                      _villeselected=newValue;
+                                      int index= int.parse(newValue);
+                                      villecontroller.text = _ville[index-1].intituleville;
+                                      representantcontroller.text=_ville[index-1].representantId;
+
+                                      filtreQuartier = _quartier.where((element) =>
+                                      (element.codeville.toLowerCase().contains(newValue.toLowerCase()))
+                                      ).toList();
+                                    }else{
+                                      _villeselected="";
+                                      _quartierselected="";
+                                    }
+
+                                  });
+                                },
+                                items: filtreVille.map((Ville map){
+                                  return new DropdownMenuItem(
+                                    value: map.codeville,
+                                    child: Text(map.intituleville),
+                                  );
+                                }
+                                ).toList(),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 5,),
+                  Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 1.1,
+                    padding: EdgeInsets.only(left: 20.0,right: 20.0),
+                    child: FormField(
+                      builder: (FormFieldState state) {
+                        return InputDecorator(
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: "Quartier",
+                            hintStyle: TextStyle(color: Colors.grey),
+                          ),
+                          isEmpty: _quartierselected == '',
+                          child: new DropdownButtonHideUnderline(
+                            child:ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton(
+                                isDense: true,
+                                value: _quartierselected.isNotEmpty ? _quartierselected : null,
+                                onChanged: (String newValue){
+                                  setState(() {
+                                    if(_villeselected!=""){
+                                      _quartierselected=newValue;
+                                      int index=int.parse(newValue);
+                                      quartiercontroller.text= _quartier[index-1].intitulequartier;
+                                    }else{
+                                      _villeselected="";
+                                    }
+                                  });
+                                  print(" Akassato: ${newValue}");
+                                },
+                                items: filtreQuartier.map((Quartier map){
+                                  return new DropdownMenuItem(
+                                    value: map.codequartier,
+                                    child: Text(map.intitulequartier),
+                                  );
+                                }
+                                ).toList(),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 5,),
+                  PhoneWidget(),
+                  Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 1.3,
+                    decoration: new BoxDecoration(
+                      color: kPrimaryColor,
+                    ),
+                    child: FlatButton(
+                      onPressed: (){
+                        setState(() {
+                          message="";
+                          if (_formKey.currentState.validate()) {
+                            _onLoading();
+                          }
+                        });
+                      },
+                      child: Text("S'inscrire",
+                        style: TextStyle(color: Colors.white, fontSize: 18,fontFamily: "Monteserrat"),),
+                    ),
+                  ),
+                  SizedBox(height: 5.0,),
+                  Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 1.3,
+                    decoration: BoxDecoration(
+                        color: Colors.white
+                    ),
+                    child: FlatButton(
+                      color: Colors.white,
+                      onPressed: (){
+                        Navigator.pushReplacement(context, SlideRightRoute(page:  Login()));
+                      },
+                      child: Text("Se connecter",
+                        style: TextStyle(color: kPrimaryColor, fontSize: 18),),
+                    ),
+                  ),
+                  SizedBox(height: 5.0,),
+                  Text(message,style: TextStyle(color: Colors.red),),
+                ],
+              ),
             ),
+          ],
+        ),
       ),
     );
   }
@@ -512,9 +444,8 @@ class _Sigin extends State<Sigin> {
             barrierDismissible: false,
             builder: (BuildContext context) {
               return new AlertDialog(
-                title: new Text("Succès",style: TextStyle(color:Colors.blue),),
-                content: new Text("Votre compte est créer avec succès\n"
-                    "Veuillez vous connecter"),
+                title: new Text("Félicitations!!!",style: TextStyle(color:kPrimaryColor),),
+                content: new Text(" Inscription éffectuée. Connectez vous! "),
                 contentPadding: EdgeInsets.all(5.0),
                 actions: <Widget>[
                   new FlatButton(onPressed: () {
@@ -527,7 +458,7 @@ class _Sigin extends State<Sigin> {
                         )
                     );
                   },
-                      child: new Text("OK")
+                      child: new Text("OK",style: TextStyle(color: kPrimaryColor),)
                   ),
                 ],
               );
@@ -536,16 +467,14 @@ class _Sigin extends State<Sigin> {
     );
   }
 
-  Future<Null> mail(String invalide) async {
+  Future<Null> mailUsed() async {
     return (
         showDialog(
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context) {
               return new AlertDialog(
-                title: new Text("Invalide",style: TextStyle(color:Colors.red),),
-                content: new Text(invalide),
-                contentPadding: EdgeInsets.all(5.0),
+                title: new Text("Email déjà utilisé, veuillez changer",style: TextStyle(color:Colors.red,fontSize: 16),),
                 actions: <Widget>[
                   new FlatButton(onPressed: () {
                     Navigator.pop(context);
@@ -558,6 +487,7 @@ class _Sigin extends State<Sigin> {
         )
     );
   }
+
   void SaveEmail() {
     String email= mailcontroller.text;
     SavePreferenceemail(email);
@@ -565,5 +495,115 @@ class _Sigin extends State<Sigin> {
   void SavePass() {
     String pass= passcontroller.text;
     SavePreferencepass(pass);
+  }
+}
+
+class PhoneWidget extends StatefulWidget {
+  @override
+  _PhoneWidgetState createState() => _PhoneWidgetState();
+}
+
+class _PhoneWidgetState extends State<PhoneWidget> {
+  String _selectedCountryCode;
+  List<codePays> _countryCodes= List();
+
+  _getCode(){
+    setState(() {
+      _countryCodes=code;
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getCode();
+  }
+  @override
+  Widget build(BuildContext context) {
+    var countryDropDown = Container(
+      decoration: new BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          right: BorderSide(width: 0.5, color: Colors.grey),
+        ),
+      ),
+      height: 45.0,
+      margin: const EdgeInsets.all(3.0),
+      //width: 300.0,
+      child: DropdownButtonHideUnderline(
+        child: ButtonTheme(
+          alignedDropdown: true,
+          child: DropdownButton(
+            hint: Text("Code",style: TextStyle(fontSize: 14,color: Colors.grey),),
+            value: _selectedCountryCode,
+            items: _countryCodes.map((codePays value) {
+              return new DropdownMenuItem<String>(
+                  value: value.code,
+                  child: new Text(
+                    value.code,
+                    style: TextStyle(fontSize: 12.0),
+                  ));
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedCountryCode = value;
+                contactcode=value;
+              });
+            },
+            style: Theme.of(context).textTheme.title,
+          ),
+        ),
+      ),
+    );
+    return Container(
+      width: double.infinity,
+      margin: new EdgeInsets.only(left: 40.0, bottom: 20.0, right: 40.0),
+      color: Colors.white,
+      child: new TextFormField(
+        key: _formKey2,
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Veuillez entrer votre contact';
+          }
+        },
+        keyboardType: TextInputType.number,
+        controller: contactcontroller,
+        decoration: new InputDecoration(
+            contentPadding: const EdgeInsets.all(14.0),
+            fillColor: Colors.white,
+            prefixIcon: countryDropDown,
+            hintText: ' Numéro',
+            hintStyle: TextStyle(color: Colors.grey)
+        ),
+      ),
+    );
+  }
+}
+TextEditingController contactcontroller=TextEditingController();
+String contactcode="";
+final _formKey2 = GlobalKey<FormState>();
+
+class Dialogs {
+  static Future<void> showLoadingDialog(
+      BuildContext context, GlobalKey key) async {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new WillPopScope(
+              onWillPop: () async => false,
+              child: SimpleDialog(
+                  key: key,
+                  backgroundColor: kPrimaryColor,
+                  children: <Widget>[
+                    Center(
+                      child: Column(children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 10,),
+                        Text("Patientez svp...",style: TextStyle(color: Colors.white),)
+                      ]),
+                    )
+                  ]));
+        });
   }
 }
