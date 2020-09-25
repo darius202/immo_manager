@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:immo_manager/Details.dart';
+import 'package:immo_manager/constants.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:immo_manager/Details.dart';
 import 'package:immo_manager/services/Services.dart';
@@ -13,7 +15,11 @@ class DataBody extends StatefulWidget {
 
 class _DataBodyState extends State<DataBody> {
 
-
+  static const String parcelle = "Parcelle";
+  static const String villa = "Maison ou Villa";
+  static const String appartement = "Appartement";
+  static const String bureau = "Bureau ou Boutique";
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   _deleteAnnonce(Annonce annonce){
     String image1Path="images/";
     String image2Path="images/";
@@ -32,16 +38,38 @@ class _DataBodyState extends State<DataBody> {
     }
     );
   }
-  _getAnnonce(){
-    annoncesService.getProduit(widget.user.id).then((annonce){
-      setState(() {
-        annonces=annonce;
-        filtreAnnonce=annonces;
-      });
-      print("Taille ${widget.user.id}");
-    } );
+  Future<void> _handleSubmit(BuildContext context) async {
+    try {
+      Dialogs.showLoadingDialog(context, _keyLoader);//invoking login
+      Navigator.of(_keyLoader.currentContext,rootNavigator: true).pop();//close the dialoge
+    } catch (error) {
+      print(error);
+    }
   }
-
+  _getAnnonce(){
+      setState(() {
+        _handleSubmit(context);
+        annoncesService.getProduit(user[0].id).then((annonce){
+          if(annonce.length!=0){
+            setState(() {
+              annonces=annonce;
+              filtreAnnonce=annonces;
+              Navigator.pop(context);
+            });
+          }else{
+            Navigator.pop(context);
+          }
+        } );
+      });
+  }
+  String moneyFormat(String price) {
+    if (price.length > 2) {
+      var value = price;
+      value = value.replaceAll(RegExp(r'\D'), '');
+      value = value.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), '.');
+      return value;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,27 +78,26 @@ class _DataBodyState extends State<DataBody> {
           borderRadius: BorderRadius.circular(5.0)
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 10,left: 20.0,right: 20.0,bottom: 10.0),
+            margin: EdgeInsets.only(top: 10,left: 20.0,right: 10.0,bottom: 20.0),
             child:  TextField(
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                  borderSide: BorderSide(color: Colors.blue, width: 2),
+                  borderSide: BorderSide(color: kPrimaryColor, width: 2),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                  borderSide: BorderSide(color: Colors.blue),
+                  borderSide: BorderSide(color:kPrimaryColor),
                 ),
-                prefixIcon: Icon(Icons.search,color: Colors.blue,size: 26,),
+                prefixIcon: Icon(Icons.search,color:kPrimaryColor,size: 26,),
                 hintText: 'Rechercher...',
               ),
               onChanged: (String string){
                 setState(() {
                   filtreAnnonce = annonces.where((element) =>
-                  (element.intitule_bien.toLowerCase().contains(string.toLowerCase()) ||
-                      element.prix.toLowerCase().contains(string.toLowerCase()) || element.date_inscrit.toLowerCase().contains(string.toLowerCase()))).toList();
+                  (element.type_mandat.toLowerCase().contains(string.toLowerCase()) ||
+                      element.prix.toLowerCase().contains(string.toLowerCase()) ||element.type_bien.toLowerCase().contains(string.toLowerCase()) || element.date_inscrit.toLowerCase().contains(string.toLowerCase()))).toList();
                 });
               },
             ),
@@ -90,64 +117,193 @@ class _DataBodyState extends State<DataBody> {
                         });
                       });
                     },
-                    child: Card(
-                      margin: EdgeInsets.all(3.0),
-                      borderOnForeground: true,
-                      elevation: 8.0,
-                      color: Colors.blueGrey,
-                      child: Padding(
-                        padding:  EdgeInsets.all(8.0),
-                        child:Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  filtreAnnonce[index].intitule_bien !=null? filtreAnnonce[index].intitule_bien :'Connexion impossible',
-                                  style: TextStyle(
-                                      fontSize: 18.0,
-                                      color: Colors.white
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0)
+                      ),
+                      child: Card(
+                        margin: EdgeInsets.all(3.0),
+                        borderOnForeground: true,
+                        elevation: 3.0,
+                        color: Colors.white,
+                        child: Padding(
+                          padding:  EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Column(
+                                children: [
+                                  Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    child: Stack(
+                                      children: <Widget>[
+                                        filtreAnnonce[index].image1!=null ?
+                                        Image.network(
+                                          "https://gerestock.com/immo/images/"+ filtreAnnonce[index].image1,
+                                          width: 100,
+                                          height: 100,
+                                        ):Container(),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 8.0,),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      filtreAnnonce[index].prix!=null? filtreAnnonce[index].prix:'Connexion impossible...',
-                                      style: TextStyle(
-                                          fontSize: 14.0,
-                                          color: Colors.yellowAccent,
-                                          fontStyle: FontStyle.normal
+                                  Container(
+                                    height:48,
+                                    child: Card(
+                                      elevation: 2.0,
+                                          color: kPrimaryColor,
+                                          child: FlatButton(
+                                            child: Text(filtreAnnonce[index].type_mandat,
+                                              style: TextStyle(color: Colors.white, fontSize: 16,fontFamily: "Monteserrat"),),
+                                          ),
+                                        ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        filtreAnnonce[index].date_inscrit !=null? "Publié le: "+filtreAnnonce[index].date_inscrit :'Connexion impossible',
+                                        style: TextStyle(
+                                            color:kPrimaryColor,
+                                            fontWeight: FontWeight.bold
+                                        ),
                                       ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8.0,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        filtreAnnonce[index].type_bien !=null? filtreAnnonce[index].type_bien :'Connexion impossible',
+                                        style: TextStyle(
+                                            fontSize: 17.0,
+                                            color:kPrimaryColor,
+                                            fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  filtreAnnonce[index].type_bien !=parcelle?
+                                  SizedBox(height: 8.0,):Container(),
+                                  filtreAnnonce[index].type_bien==villa?
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Image.asset('assets/salon.png',fit: BoxFit.cover,),
+                                      SizedBox(width: 5.0,),
+                                      Text(filtreAnnonce[index].nbsalon+" salon"),
+                                      SizedBox(width: 8.0,),
+                                      Image.asset('assets/chambre.png',fit: BoxFit.cover,),
+                                      SizedBox(width: 5.0,),
+                                      Text(filtreAnnonce[index].nbchambre+" chambre"),
+                                    ],
+                                  ):Container(),
+                                  filtreAnnonce[index].type_bien==appartement?
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Image.asset('assets/salon.png',fit: BoxFit.cover,),
+                                      SizedBox(width: 5.0,),
+                                      Text(filtreAnnonce[index].nbsalon+" salon"),
+                                      SizedBox(width: 8.0,),
+                                      Image.asset('assets/chambre.png',fit: BoxFit.cover,),
+                                      SizedBox(width: 5.0,),
+                                      Text(filtreAnnonce[index].nbchambre+" chambre"),
+                                    ],
+                                  ):Container(),
+                                  filtreAnnonce[index].type_bien !="Parcelle"?
+                                  SizedBox(height: 8.0,):Container(),
+                                  filtreAnnonce[index].type_bien==villa?
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Image.asset('assets/cuisine.png',fit: BoxFit.cover,),
+                                      SizedBox(width: 5.0,),
+                                      Text(filtreAnnonce[index].nbcuisine+" cuisine"),
+                                      SizedBox(width: 8.0,),
+                                      Image.asset('assets/bain.png',fit: BoxFit.cover,),
+                                      SizedBox(width: 5.0,),
+                                      Text(filtreAnnonce[index].nbsalledebain+" douche"),
+                                    ],
+                                  ):Container(),
+                                  filtreAnnonce[index].type_bien==appartement?
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Image.asset('assets/cuisine.png',fit: BoxFit.cover,),
+                                      SizedBox(width: 5.0,),
+                                      Text(filtreAnnonce[index].nbcuisine+" cuisine"),
+                                      SizedBox(width: 8.0,),
+                                      Image.asset('assets/bain.png',fit: BoxFit.cover,),
+                                      SizedBox(width: 5.0,),
+                                      Text(filtreAnnonce[index].nbsalledebain+" douche"),
+                                    ],
+                                  ):Container(),
+                                  filtreAnnonce[index].type_bien==bureau?
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Image.asset('assets/bain.png',fit: BoxFit.cover,),
+                                      SizedBox(width: 5.0,),
+                                      Text(filtreAnnonce[index].nbsalon+" douche"),
+                                      SizedBox(width: 8.0,),
+                                      Image.asset('assets/chambre.png',fit: BoxFit.cover,),
+                                      SizedBox(width: 5.0,),
+                                      Text(filtreAnnonce[index].nbchambre+" pièce"),
+                                    ],
+                                  ):Container(),
+
+                                  SizedBox(height: 8.0,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        filtreAnnonce[index].prix!=null? moneyFormat(filtreAnnonce[index].prix)+" Fcfa ":'Connexion impossible...',
+                                        style: TextStyle(
+                                            fontSize: 18.0,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.normal
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8.0,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        filtreAnnonce[index].negoce!=null? filtreAnnonce[index].negoce:'Connexion impossible...',
+                                        style: TextStyle(
+                                            color: kTextLigthtColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.normal
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Flexible(
+                                child: Row(
+                                  children: [
+                                    IconButton(
+                                        icon: Icon(Icons.delete,color: Colors.red,),
+                                        onPressed: (){
+                                          alerte(annonces[index]);
+                                        }
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 8.0,),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      filtreAnnonce[index].date_inscrit!=null? filtreAnnonce[index].date_inscrit:'Connexion impossible...',
-                                      style: TextStyle(
-                                          fontSize: 14.0,
-                                          color: Colors.white,
-                                          fontStyle: FontStyle.normal
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            IconButton(
-                                icon: Icon(Icons.delete,color: Colors.white,),
-                                onPressed: (){
-                                  alerte(filtreAnnonce[index]);
-                                }
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -155,18 +311,7 @@ class _DataBodyState extends State<DataBody> {
                 }
             ),
           ),
-          SizedBox(height: 60,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                CircleAvatar(
-                  child: Icon(Icons.person,color: Colors.white,),
-                  backgroundColor: Colors.blue,
-                ),
-                SizedBox(width: 12.0,),
-                Text(widget.user.pseudo,style: TextStyle(fontWeight: FontWeight.normal,fontSize: 14),),
-              ],
-            ),)
+          SizedBox(height: 30,)
         ],
       ),
     );
@@ -209,3 +354,27 @@ class _DataBodyState extends State<DataBody> {
   }
 }
 
+class Dialogs {
+  static Future<void> showLoadingDialog(
+      BuildContext context, GlobalKey key) async {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new WillPopScope(
+              onWillPop: () async => false,
+              child: SimpleDialog(
+                  key: key,
+                  backgroundColor: kPrimaryColor,
+                  children: <Widget>[
+                    Center(
+                      child: Column(children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 10,),
+                        Text("Patientez svp...",style: TextStyle(color: Colors.white),)
+                      ]),
+                    )
+                  ]));
+        });
+  }
+}

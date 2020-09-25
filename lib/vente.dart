@@ -39,7 +39,6 @@ class _VenteState extends State<Vente> {
   //Etage
   List <Etage> _etage = List();
   String _etageselected="";
-  TextEditingController nbetageController;
 //Quartier  variables
   List <Quartier> _quartier = List();
   List <Quartier> filtreQuartier = List();
@@ -55,9 +54,8 @@ class _VenteState extends State<Vente> {
   String _situationselected = "";
 
   //Superficie  variables
+  String nbetageController="";
   TextEditingController superficieController;
-  TextEditingController DescriptifController;
-  //Chambre  variables
   TextEditingController chambreController;
   // Salon  variables
   TextEditingController salonController;
@@ -67,7 +65,9 @@ class _VenteState extends State<Vente> {
   TextEditingController bainController;
   //Prix variables
   TextEditingController prixController;
-  TextEditingController intituleController;
+  String DescriptifController="";
+  //Chambre  variables
+  String intituleController="";
   String negoce="";
   String situationadministrativeController="";
   String newconstruire="";
@@ -127,9 +127,12 @@ class _VenteState extends State<Vente> {
   }
   Future<void> _handleSubmit(BuildContext context) async {
     try {
-
       Dialogs.showLoadingDialog(context, _keyLoader);//invoking login
       Navigator.of(_keyLoader.currentContext,rootNavigator: true).pop();//close the dialoge
+      Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (context) =>  Home(),
+      )
+      );
     } catch (error) {
       print(error);
     }
@@ -166,24 +169,24 @@ class _VenteState extends State<Vente> {
       if(balcon!="")
         balcon="oui";
     }
-    annoncesService.addProduit(widget.user.id,
-        widget.user.contact,
-        intituleController.text,
+    annoncesService.addProduit(user[0].id,
+        user[0].contact,
+        intituleController,
         type_bienController,
         "Vente",
-        superficieController.text,
+        superficieController.text!=null?superficieController.text:"",
         paysController,
         villeController,
         quartierController,
-        DescriptifController.text,
-        prixController.text,
+        DescriptifController,
+        prixController.text!=null?prixController.text:"",
         negoce,
         situationadministrativeController,
-        nbetageController.text,
-        salonController.text,
-        chambreController.text,
-        cuisineController.text,
-        bainController.text,
+        nbetageController,
+        salonController.text!=null?salonController.text:"",
+        chambreController.text!=null?chambreController.text:"",
+        cuisineController.text!=null?cuisineController.text:"",
+        bainController.text!=null?bainController.text:"",
         newconstruire,
         dependance,
         garage,
@@ -200,14 +203,14 @@ class _VenteState extends State<Vente> {
         uploader[1].imageFile,
         uploader[2].imageFile,
         uploader[3].imageFile,
-        widget.user.pseudo).then((value) {
+        user[0].pseudo).then((value) {
       if ("1" == value) {
         Navigator.pop(context);
-       reussi();
+        reussi();
 
       }else{
         Navigator.pop(context);
-
+       _showMessageInScaffold2("Annonce non publiée...");
       }
     });
   }
@@ -233,8 +236,13 @@ class _VenteState extends State<Vente> {
       cuisineController.text="";
       bainController.text="";
       prixController.text="";
-      DescriptifController.text="";
-      nbetageController.text="";
+      DescriptifController="";
+      nbetageController="";
+      situationadministrativeController="";
+      uploader[0].imageFile=null;
+      uploader[1].imageFile=null;
+      uploader[2].imageFile=null;
+      uploader[3].imageFile=null;
     });
   }
   @override
@@ -247,18 +255,15 @@ class _VenteState extends State<Vente> {
     cuisineController= TextEditingController();
     bainController= TextEditingController();
     prixController= TextEditingController();
-    DescriptifController=TextEditingController();
-    nbetageController=TextEditingController();
-    intituleController=TextEditingController();
     superficieController.text="";
     chambreController.text="";
     salonController.text="";
     cuisineController.text="";
     bainController.text="";
     prixController.text="";
-    DescriptifController.text="";
-    nbetageController.text="";
-    intituleController.text="";
+    DescriptifController="";
+    nbetageController="";
+    intituleController="";
 
     _getVille();
     _getPays();
@@ -330,7 +335,7 @@ class _VenteState extends State<Vente> {
                 ),
               ),
               height: 45.0,
-              margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+              margin: const EdgeInsets.only(right: 20.0, left: 20.0),
               child: FormField(
                 builder: (FormFieldState state) {
                   return InputDecorator(
@@ -353,7 +358,7 @@ class _VenteState extends State<Vente> {
                               type_bienController = newValue;
                               _initialisation();
                             });
-                            print(_mandatselected);
+                            print("type de bien: "+type_bienController);
                           },
                           items: _mandat.map((Mandat map) {
                             return new DropdownMenuItem(
@@ -377,18 +382,24 @@ class _VenteState extends State<Vente> {
                 ),
               ),
               height: 45.0,
-              margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+              margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
               child: new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   new Flexible(
                     child: new TextFormField(
-                      controller: intituleController,
+                      textCapitalization: TextCapitalization.sentences,
                       decoration: InputDecoration(
                           hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                           hintText: "Intitulé du bien",
                           contentPadding: EdgeInsets.all(10)
                       ),
+                      onChanged: (String valeur){
+                        setState(() {
+                          intituleController=valeur;
+                          print("intitulé de bien: "+intituleController);
+                        });
+                      },
                       validator: (String value){
                         if(value.isEmpty){
                           return "Saisissez l'intitulé du bien.";
@@ -407,7 +418,7 @@ class _VenteState extends State<Vente> {
                 ),
               ),
               height: 45.0,
-              margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+              margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
               child: FormField(
                 builder: (FormFieldState state) {
                   return InputDecorator(
@@ -435,7 +446,7 @@ class _VenteState extends State<Vente> {
                                   newValue.toLowerCase()))
                               ).toList();
                             });
-                            print(_paysselected);
+                            print("Pays du bien: "+paysController);
                           },
                           items: _pays.map((Pays map) {
                             return new DropdownMenuItem(
@@ -459,7 +470,7 @@ class _VenteState extends State<Vente> {
                 ),
               ),
               height: 45.0,
-              margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+              margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
               child: FormField(
                 builder: (FormFieldState state) {
                   return InputDecorator(
@@ -483,7 +494,6 @@ class _VenteState extends State<Vente> {
                                 _villeselected = newValue;
                                 int index = int.parse(newValue);
                                 villeController = _ville[index - 1].intituleville;
-
                                 filtreQuartier = _quartier.where((element) =>
                                 (element.codeville.toLowerCase().contains(
                                     newValue.toLowerCase()))
@@ -493,6 +503,7 @@ class _VenteState extends State<Vente> {
                                 _quartierselected = "";
                               }
                             });
+                            print("ville de bien: "+villeController);
                           },
                           items: filtreVille.map((Ville map) {
                             return new DropdownMenuItem(
@@ -516,7 +527,7 @@ class _VenteState extends State<Vente> {
                 ),
               ),
               height: 45.0,
-              margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+              margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
               child: FormField(
                 builder: (FormFieldState state) {
                   return InputDecorator(
@@ -541,6 +552,7 @@ class _VenteState extends State<Vente> {
                                 _villeselected="";
                               }
                             });
+                            print("quartier de bien:"+quartierController);
                           },
                           items: filtreQuartier.map((Quartier map){
                             return new DropdownMenuItem(
@@ -605,7 +617,7 @@ class _VenteState extends State<Vente> {
                   children: <Widget>[
                     new Flexible(
                       child: new TextFormField(
-                          controller: prixController,
+                        controller: prixController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
@@ -643,7 +655,7 @@ class _VenteState extends State<Vente> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(top:5.0,right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child: CheckboxGroup(
                     labels: <String>[
@@ -664,7 +676,7 @@ class _VenteState extends State<Vente> {
                   ),
                 ),
                 height: 45.0,
-                margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
                 child: FormField(
                   builder: (FormFieldState state) {
                     return InputDecorator(
@@ -709,19 +721,25 @@ class _VenteState extends State<Vente> {
                     right: BorderSide(width: 0.5, color: Colors.grey),
                   ),
                 ),
-                margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     new Flexible(
                       child: new TextFormField(
+                        textCapitalization: TextCapitalization.sentences,
+                        autocorrect: true,
                           maxLines: 4,
-                          controller: DescriptifController,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                               hintText: "Descriptif",
                               contentPadding: EdgeInsets.all(10)
                           ),
+                        onChanged: (String valeur){
+                            setState(() {
+                              DescriptifController=valeur;
+                            });
+                        },
                         validator: (value){
                           if(value.isEmpty){
                             return "Entrer une descrption ";
@@ -816,7 +834,7 @@ class _VenteState extends State<Vente> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(top:5.0,right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child: CheckboxGroup(
                     labels: <String>[
@@ -837,7 +855,7 @@ class _VenteState extends State<Vente> {
                   ),
                 ),
                 height: 45.0,
-                margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -885,7 +903,7 @@ class _VenteState extends State<Vente> {
                   ),
                 ),
                 height: 45.0,
-                margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -933,7 +951,7 @@ class _VenteState extends State<Vente> {
                   ),
                 ),
                 height: 45.0,
-                margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
                 child: FormField(
                   builder: (FormFieldState state) {
                     return InputDecorator(
@@ -953,7 +971,7 @@ class _VenteState extends State<Vente> {
                             onChanged: (String newValue) {
                               setState(() {
                                 _etageselected = newValue;
-                                nbetageController.text = newValue;
+                                nbetageController = newValue;
                               });
                               print(_etageselected);
                             },
@@ -979,7 +997,7 @@ class _VenteState extends State<Vente> {
                   ),
                 ),
                 height: 45.0,
-                margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
                 child: FormField(
                   builder: (FormFieldState state) {
                     return InputDecorator(
@@ -1024,19 +1042,24 @@ class _VenteState extends State<Vente> {
                     right: BorderSide(width: 0.5, color: Colors.grey),
                   ),
                 ),
-                margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     new Flexible(
                       child: new TextFormField(
-                          maxLines: 6,
-                          controller: DescriptifController,
+                        textCapitalization: TextCapitalization.sentences,
+                          maxLines: 4,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                               hintText: "Descriptif",
                               contentPadding: EdgeInsets.all(10)
                           ),
+                        onChanged: (String valeur){
+                          setState(() {
+                            DescriptifController=valeur;
+                          });
+                        },
                         validator: (value){
                           if(value.isEmpty){
                             return "Entrez une description ";
@@ -1058,7 +1081,7 @@ class _VenteState extends State<Vente> {
                   color: Colors.white,
 
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1076,7 +1099,7 @@ class _VenteState extends State<Vente> {
                   color: Colors.white,
 
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1094,7 +1117,7 @@ class _VenteState extends State<Vente> {
                   color: Colors.white,
 
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1112,7 +1135,7 @@ class _VenteState extends State<Vente> {
                   color: Colors.white,
 
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1129,7 +1152,7 @@ class _VenteState extends State<Vente> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1146,7 +1169,7 @@ class _VenteState extends State<Vente> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1163,7 +1186,7 @@ class _VenteState extends State<Vente> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1181,7 +1204,7 @@ class _VenteState extends State<Vente> {
                   color: Colors.white,
 
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1198,7 +1221,7 @@ class _VenteState extends State<Vente> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1232,7 +1255,7 @@ class _VenteState extends State<Vente> {
                     style: TextStyle(color: Colors.white, fontSize: 18,fontFamily: "Monteserrat"),),
                 ),
               ),
-              SizedBox(height: 100,)
+              SizedBox(height: 40,)
             ],
           );
           break;
@@ -1269,7 +1292,20 @@ class _VenteState extends State<Vente> {
       _scaffoldKey.currentState.showSnackBar(
           SnackBar(
             backgroundColor: kPrimaryColor,
-            content: Text(message, style: TextStyle(color: Colors.white),),
+            content: Text(message, style: TextStyle(color: Colors.white,fontSize: 16),),
+            duration: Duration(seconds: 2, milliseconds: 500),
+          )
+      );
+    } on Exception catch (e, s) {
+      print(s);
+    }
+  }
+  void _showMessageInScaffold2(String message) {
+    try {
+      _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(message, style: TextStyle(color: Colors.white,fontSize: 16),),
             duration: Duration(seconds: 2, milliseconds: 500),
           )
       );
@@ -1293,7 +1329,8 @@ class _VenteState extends State<Vente> {
               children: <Widget>[
                 uploader[index].imageFile !=null ?
                 Image.file(
-                  uploader[index].imageFile,
+                  uploader[index].imageFile!=null?
+                  uploader[index].imageFile:"",
                   width: 300,
                   height: 300,
                 ):Container(),

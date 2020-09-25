@@ -49,8 +49,8 @@ class _LocationState extends State<Location> {
   String _mandatselected = "";
   String type_bienController;
   //Superficie  variables
-  TextEditingController superficieController;
-  TextEditingController DescriptifController;
+  String superficieController="";
+  String DescriptifController;
   //Chambre  variables
   TextEditingController chambreController;
   // Salon  variables
@@ -62,7 +62,7 @@ class _LocationState extends State<Location> {
   //Prix variables
   TextEditingController prixController;
 
-  TextEditingController intituleController;
+  String intituleController;
 
   List<Object> images = List<Object>();
   Future<File> _imageFile;
@@ -121,9 +121,12 @@ class _LocationState extends State<Location> {
 
   Future<void> _handleSubmit(BuildContext context) async {
     try {
-
       Dialogs.showLoadingDialog(context, _keyLoader);//invoking login
       Navigator.of(_keyLoader.currentContext,rootNavigator: true).pop();//close the dialoge
+      Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (context) =>  Home(),
+      )
+      );
     } catch (error) {
       print(error);
     }
@@ -144,16 +147,21 @@ class _LocationState extends State<Location> {
     balcon="";
     meuble="";
     ascensseur="";
-   superficieController.text="";
+   superficieController="";
    chambreController.text="";
    salonController.text="";
    cuisineController.text="";
    bainController.text="";
    prixController.text="";
-   DescriptifController.text="";
+   DescriptifController="";
    nbetageController.text="";
+   uploader[0].imageFile=null;
+   uploader[1].imageFile=null;
+   uploader[2].imageFile=null;
+   uploader[3].imageFile=null;
     });
  }
+
   void _onLoading() {
     _handleSubmit(context);
     if(negoce=="")
@@ -199,14 +207,14 @@ class _LocationState extends State<Location> {
     }
     annoncesService.addProduit(widget.user.id,
         widget.user.contact,
-        intituleController.text,
+        intituleController,
         type_bienController,
         "Location",
-        superficieController.text,
+        superficieController,
         paysController,
         villeController,
         quartierController,
-        DescriptifController.text,
+        DescriptifController,
         prixController.text,
         negoce,
         situationadministrativeController,
@@ -238,7 +246,7 @@ class _LocationState extends State<Location> {
 
       }else{
         Navigator.pop(context);
-
+        _showMessageInScaffold2("Annonce non publiée...");
       }
     });
   }
@@ -247,25 +255,24 @@ class _LocationState extends State<Location> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    superficieController= TextEditingController();
     chambreController = TextEditingController();
     salonController= TextEditingController();
     cuisineController= TextEditingController();
     bainController= TextEditingController();
     prixController= TextEditingController();
-    DescriptifController=TextEditingController();
+    DescriptifController="";
     nbetageController=TextEditingController();
-    intituleController=TextEditingController();
+    intituleController="";
 
-    superficieController.text="";
+    superficieController="";
     chambreController.text="";
     salonController.text="";
     cuisineController.text="";
     bainController.text="";
     prixController.text="";
-    DescriptifController.text="";
+    DescriptifController="";
     nbetageController.text="";
-    intituleController.text="";
+    intituleController="";
 
     _getVille();
     _getPays();
@@ -335,7 +342,7 @@ class _LocationState extends State<Location> {
               ),
             ),
             height: 45.0,
-            margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+            margin: const EdgeInsets.only(right: 20.0, left: 20.0),
             child: FormField(
               builder: (FormFieldState state) {
                 return InputDecorator(
@@ -382,18 +389,23 @@ class _LocationState extends State<Location> {
               ),
             ),
             height: 45.0,
-            margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+            margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
             child: new Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 new Flexible(
                   child: new TextFormField(
-                      controller: intituleController,
+                    textCapitalization: TextCapitalization.sentences,
                       decoration: InputDecoration(
                           hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                           hintText: "Intitulé du bien",
                           contentPadding: EdgeInsets.all(10)
                       ),
+                    onChanged:(String valeur){
+                      setState(() {
+                        intituleController=valeur;
+                      });
+                    },
                     validator: (String value){
                       if(value.isEmpty){
                         return "Saisissez l'intitulé du bien.";
@@ -412,7 +424,7 @@ class _LocationState extends State<Location> {
               ),
             ),
             height: 45.0,
-            margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+            margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
             child: FormField(
               builder: (FormFieldState state) {
                 return InputDecorator(
@@ -464,7 +476,7 @@ class _LocationState extends State<Location> {
               ),
             ),
             height: 45.0,
-            margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+            margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
             child: FormField(
               builder: (FormFieldState state) {
                 return InputDecorator(
@@ -521,7 +533,7 @@ class _LocationState extends State<Location> {
               ),
             ),
             height: 45.0,
-            margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+            margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
             child: FormField(
               builder: (FormFieldState state) {
                 return InputDecorator(
@@ -627,17 +639,16 @@ class _LocationState extends State<Location> {
                     SizedBox(width: 20.0,),
                     new Flexible(
                       child: new TextFormField(
-                          controller: superficieController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                               hintText: "Superficie",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (String value){
-                          if(value.isEmpty){
-                            return "Entrez la superficie";
-                          }
+                        onChanged: (String valeur){
+                            setState(() {
+                              superficieController=valeur;
+                            });
                         },
                       ),
                     ),
@@ -648,7 +659,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(top:5.0,right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child: CheckboxGroup(
                     labels: <String>[
@@ -669,7 +680,7 @@ class _LocationState extends State<Location> {
                   ),
                 ),
                 height: 45.0,
-                margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -717,7 +728,7 @@ class _LocationState extends State<Location> {
                   ),
                 ),
                 height: 45.0,
-                margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -765,7 +776,7 @@ class _LocationState extends State<Location> {
                   ),
                 ),
                 height: 45.0,
-                margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
                 child: FormField(
                   builder: (FormFieldState state) {
                     return InputDecorator(
@@ -810,19 +821,24 @@ class _LocationState extends State<Location> {
                     right: BorderSide(width: 0.5, color: Colors.grey),
                   ),
                 ),
-                margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     new Flexible(
                       child: new TextFormField(
-                          maxLines: 6,
-                          controller: DescriptifController,
+                        textCapitalization: TextCapitalization.sentences,
+                          maxLines: 4,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                               hintText: "Descriptif",
                               contentPadding: EdgeInsets.all(10)
-                          )
+                          ),
+                        onChanged:(String valeur){
+                            setState(() {
+                              DescriptifController=valeur;
+                            });
+                        },
                       ),
                     ),
                   ],
@@ -839,7 +855,7 @@ class _LocationState extends State<Location> {
                   color: Colors.white,
 
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -857,7 +873,7 @@ class _LocationState extends State<Location> {
                   color: Colors.white,
 
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -874,7 +890,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -892,7 +908,7 @@ class _LocationState extends State<Location> {
                   color: Colors.white,
 
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -910,7 +926,7 @@ class _LocationState extends State<Location> {
                   color: Colors.white,
 
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -928,7 +944,7 @@ class _LocationState extends State<Location> {
                   color: Colors.white,
 
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -946,7 +962,7 @@ class _LocationState extends State<Location> {
                   color: Colors.white,
 
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -964,7 +980,7 @@ class _LocationState extends State<Location> {
                   color: Colors.white,
 
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -982,7 +998,7 @@ class _LocationState extends State<Location> {
                   color: Colors.white,
 
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1015,7 +1031,7 @@ class _LocationState extends State<Location> {
                     style: TextStyle(color: Colors.white, fontSize: 18,fontFamily: "Monteserrat"),),
                 ),
               ),
-              SizedBox(height: 100,)
+              SizedBox(height: 40,)
             ],
           );
           break;
@@ -1053,17 +1069,16 @@ class _LocationState extends State<Location> {
                     SizedBox(width: 20.0,),
                     new Flexible(
                       child: new TextFormField(
-                          controller: superficieController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                               hintText: "Superficie",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (String value){
-                          if(value.isEmpty){
-                            return "Entrez la superficie";
-                          }
+                        onChanged: (String valeur){
+                          setState(() {
+                            superficieController=valeur;
+                          });
                         },
                       ),
                     ),
@@ -1074,7 +1089,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(top:5.0,right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child: CheckboxGroup(
                     labels: <String>[
@@ -1095,7 +1110,7 @@ class _LocationState extends State<Location> {
                   ),
                 ),
                 height: 45.0,
-                margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -1143,7 +1158,7 @@ class _LocationState extends State<Location> {
                   ),
                 ),
                 height: 45.0,
-                margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -1191,7 +1206,7 @@ class _LocationState extends State<Location> {
                   ),
                 ),
                 height: 45.0,
-                margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
                 child: FormField(
                   builder: (FormFieldState state) {
                     return InputDecorator(
@@ -1236,19 +1251,24 @@ class _LocationState extends State<Location> {
                     right: BorderSide(width: 0.5, color: Colors.grey),
                   ),
                 ),
-                margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     new Flexible(
                       child: new TextFormField(
-                          maxLines: 6,
-                          controller: DescriptifController,
+                        textCapitalization: TextCapitalization.sentences,
+                          maxLines: 4,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                               hintText: "Descriptif",
                               contentPadding: EdgeInsets.all(10)
                           ),
+                        onChanged:(String valeur){
+                          setState(() {
+                            DescriptifController=valeur;
+                          });
+                        },
                         validator: (String value){
                           if(value.isEmpty){
                             return "Entrez une description du bien";
@@ -1269,7 +1289,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1286,7 +1306,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1303,7 +1323,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1320,7 +1340,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1337,7 +1357,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1354,7 +1374,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1371,7 +1391,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1388,7 +1408,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1405,7 +1425,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1438,7 +1458,7 @@ class _LocationState extends State<Location> {
                     style: TextStyle(color: Colors.white, fontSize: 18,fontFamily: "Monteserrat"),),
                 ),
               ),
-              SizedBox(height: 100,)
+              SizedBox(height: 40,)
             ],
           );
           break;
@@ -1476,17 +1496,16 @@ class _LocationState extends State<Location> {
                     SizedBox(width: 20.0,),
                     new Flexible(
                       child: new TextFormField(
-                          controller: superficieController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                               hintText: "Superficie",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (String value){
-                          if(value.isEmpty){
-                            return "Entrez la superficie";
-                          }
+                        onChanged: (String valeur){
+                          setState(() {
+                            superficieController=valeur;
+                          });
                         },
                       ),
                     ),
@@ -1497,7 +1516,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(top:5.0,right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child: CheckboxGroup(
                     labels: <String>[
@@ -1518,7 +1537,7 @@ class _LocationState extends State<Location> {
                   ),
                 ),
                 height: 45.0,
-                margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -1566,7 +1585,7 @@ class _LocationState extends State<Location> {
                   ),
                 ),
                 height: 45.0,
-                margin: const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
                 child: FormField(
                   builder: (FormFieldState state) {
                     return InputDecorator(
@@ -1611,19 +1630,25 @@ class _LocationState extends State<Location> {
                     right: BorderSide(width: 0.5, color: Colors.grey),
                   ),
                 ),
-                margin: const EdgeInsets.only(top:20.0,right: 20.0, left: 20.0),
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     new Flexible(
                       child: new TextFormField(
-                          maxLines: 6,
-                          controller: DescriptifController,
+                        textCapitalization: TextCapitalization.sentences,
+                        autocorrect: true,
+                          maxLines: 4,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                               hintText: "Descriptif",
                               contentPadding: EdgeInsets.all(10)
                           ),
+                        onChanged: (String valeur){
+                            setState(() {
+                              DescriptifController=valeur;
+                            });
+                        },
                         validator: (String value){
                           if(value.isEmpty){
                             return "Entrez une description du bien";
@@ -1661,7 +1686,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1678,7 +1703,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1695,7 +1720,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1712,7 +1737,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1729,7 +1754,7 @@ class _LocationState extends State<Location> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                padding:  const EdgeInsets.only(top:20.0,right: 40.0, left: 40.0),
+                padding:  const EdgeInsets.only(right: 40.0, left: 40.0),
                 margin: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child:CheckboxGroup(
                     labels: <String>[
@@ -1762,7 +1787,7 @@ class _LocationState extends State<Location> {
                     style: TextStyle(color: Colors.white, fontSize: 18,fontFamily: "Monteserrat"),),
                 ),
               ),
-              SizedBox(height: 100,)
+              SizedBox(height: 40,)
             ],
           );
           break;
@@ -1807,6 +1832,19 @@ class _LocationState extends State<Location> {
       print(s);
     }
   }
+  void _showMessageInScaffold2(String message) {
+    try {
+      _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(message, style: TextStyle(color: Colors.white,fontSize: 16),),
+            duration: Duration(seconds: 2, milliseconds: 500),
+          )
+      );
+    } on Exception catch (e, s) {
+      print(s);
+    }
+  }
   Widget buildGridView() {
     return GridView.count(
       shrinkWrap: true,
@@ -1822,7 +1860,8 @@ class _LocationState extends State<Location> {
             child: Stack(
               children: <Widget>[
                 Image.file(
-                  uploader[index].imageFile,
+                  uploader[index].imageFile!=null?
+                  uploader[index].imageFile:"",
                   width: 300,
                   height: 300,
                 ),

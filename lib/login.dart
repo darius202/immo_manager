@@ -171,9 +171,9 @@ class _Login extends State<Login> {
                   ),
                   child: FlatButton(
                     onPressed: (){
-                      Navigator.pushReplacement(context, SlideRightRoute(page:  Sigin()));
+                      _getUser();
                     },
-                    child: Text("S'inscrire",
+                    child: Text("Se connecter",
                       style: TextStyle(color: Colors.white, fontSize: 18,fontFamily: "Monteserrat"),),
                   ),
                 ),
@@ -189,9 +189,9 @@ class _Login extends State<Login> {
                 child: FlatButton(
                   color: Colors.white,
                   onPressed: (){
-                    _getUser();
+                    Navigator.pushReplacement(context, SlideRightRoute(page:  Sigin()));
                   },
-                  child: Text("Se connecter",
+                  child: Text("S'inscrire",
                     style: TextStyle(color: kPrimaryColor, fontSize: 18),),
                 ),
               ),

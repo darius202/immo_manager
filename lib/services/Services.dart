@@ -202,7 +202,7 @@ class annoncesService{
 
   }
  //Envoie d'image
-  Future upload(File imageFile) async{
+  static Future upload(File imageFile) async{
     var stream  = new http.ByteStream(imageFile.openRead());
     stream.cast();
     var length= await imageFile.length();

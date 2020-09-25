@@ -8,7 +8,7 @@ Widget createDrawerHeader() {
       decoration: BoxDecoration(
           image: DecorationImage(
               fit: BoxFit.contain,
-              image:  AssetImage('assets/icone.png'))),
+              image:  AssetImage('assets/wimmo.jpg'))),
       child: Stack(children: <Widget>[
         Positioned(
             bottom: 12.0,

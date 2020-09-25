@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:immo_manager/constants.dart';
 import 'package:immo_manager/services/Services.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,6 +16,10 @@ class Details extends StatefulWidget{
 }
 
 class _Details extends State<Details> {
+  static const String parcelle = "Parcelle";
+  static const String villa = "Maison ou Villa";
+  static const String appartement = "Appartement";
+  static const String bureau = "Bureau ou Boutique";
 
   String path1 = "https://gerestock.com/immo/images/";
   String path2 = "https://gerestock.com/immo/images/";
@@ -46,14 +51,13 @@ class _Details extends State<Details> {
   TextEditingController descriptionController;
   TextEditingController prixController;
   TextEditingController nbetagecontroller;
-  TextEditingController nbpiececontroller;
-  TextEditingController nbchambrecontroller;
-  TextEditingController nbsallebaincontroller;
-  TextEditingController nbtoilvisiteurcontroller;
-  TextEditingController nbsallesejourcontroller;
+  TextEditingController situationadministrative;
+  TextEditingController nbetage;
+  TextEditingController nbsalon;
+  TextEditingController nbchambre;
+  TextEditingController nbcuisine;
+  TextEditingController nbsalledebain;
   String negoceController;
-
-
   File _image1;
   File _image2;
   File _image3;
@@ -127,11 +131,8 @@ class _Details extends State<Details> {
     });
   }
 
-
   bool switchControl2;
-
   String textHolder2 = "";
-
   void toggleSwitch2(bool value) {
     if (switchControl2 == false) {
       setState(() {
@@ -243,11 +244,12 @@ class _Details extends State<Details> {
     descriptionController = TextEditingController();
     prixController = TextEditingController();
     nbetagecontroller = TextEditingController();
-    nbpiececontroller = TextEditingController();
-    nbchambrecontroller = TextEditingController();
-    nbsallebaincontroller = TextEditingController();
-    nbtoilvisiteurcontroller = TextEditingController();
-    nbsallesejourcontroller = TextEditingController();
+    nbetage = TextEditingController();
+     nbsalon = TextEditingController();
+    nbchambre = TextEditingController();
+  nbcuisine= TextEditingController();
+     nbsalledebain= TextEditingController();
+
     negoceController = '';
     intitule_bienController.text = widget.annonce.intitule_bien;
     type_bienController.text = widget.annonce.type_bien;
@@ -259,12 +261,22 @@ class _Details extends State<Details> {
     descriptionController.text = widget.annonce.description;
     prixController.text = widget.annonce.prix;
     nbetagecontroller.text = widget.annonce.nbetage;
-    nbpiececontroller.text = widget.annonce.nbpiece;
-    nbchambrecontroller.text = widget.annonce.nbchambre;
-    nbsallebaincontroller.text = widget.annonce.nbsallebain;
-    nbtoilvisiteurcontroller.text = widget.annonce.nbtoilvisiteur;
-    nbsallesejourcontroller.text = widget.annonce.nbsallesejour;
     negoceController = widget.annonce.negoce;
+    widget.annonce.nbetage.isNotEmpty?
+     nbetage.text=widget.annonce.nbetage:nbetage.text="";
+    widget.annonce.nbsalon.isNotEmpty?
+    nbsalon.text=widget.annonce.nbsalon:nbsalon.text="";
+
+    widget.annonce.nbchambre.isNotEmpty?
+    nbchambre.text=widget.annonce.nbchambre:nbchambre.text="";
+
+    widget.annonce.nbcuisine.isNotEmpty?
+    nbcuisine.text=widget.annonce.nbcuisine:nbcuisine.text="";
+
+    widget.annonce.nbsalledebain.isNotEmpty?
+    nbsalledebain.text=widget.annonce.nbsalledebain:nbsalledebain.text="";
+
+
     path1 += widget.annonce.image1;
     path2 += widget.annonce.image2;
     path3 += widget.annonce.image3;
@@ -294,8 +306,16 @@ class _Details extends State<Details> {
     return Scaffold(
       resizeToAvoidBottomInset : false,
       appBar: AppBar(
-        title: Text(_titreProgress),
-        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: (){
+            Navigator.pop(context);
+          },
+        ),
+        backgroundColor: kPrimaryColor,
+        elevation: 2.0,
+        title:Text(widget.annonce.type_bien,style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.bold)),
+        centerTitle: false,
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -315,7 +335,7 @@ class _Details extends State<Details> {
                               onChanged: toggleSwitch,
                               value: switchControl,
                               activeColor: Colors.white,
-                              activeTrackColor: Colors.blue,
+                              activeTrackColor:kPrimaryColor,
                               inactiveThumbColor: Colors.white,
                               inactiveTrackColor: Colors.red,
                             )
@@ -335,7 +355,7 @@ class _Details extends State<Details> {
                                 onChanged: toggleSwitch2,
                                 value: switchControl2,
                                 activeColor: Colors.white,
-                                activeTrackColor: Colors.blue,
+                                activeTrackColor: kPrimaryColor,
                                 inactiveThumbColor: Colors.white,
                                 inactiveTrackColor: Colors.red,
                               )
@@ -355,7 +375,7 @@ class _Details extends State<Details> {
                 decoration: InputDecoration(
                     hintStyle: TextStyle(color: Colors.grey),
                     suffix: IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue,),
+                        icon: Icon(Icons.edit, color:kPrimaryColor,),
                         onPressed: () {
                           setState(() {
                             readintitule = false;
@@ -366,7 +386,6 @@ class _Details extends State<Details> {
                 ),
                 maxLines: 3,
               ),
-              SizedBox(height: 14,),
               TextFormField(
                 controller: type_bienController,
                 readOnly: readtypebien,
@@ -376,7 +395,6 @@ class _Details extends State<Details> {
                     prefixStyle: TextStyle(color: Colors.black)
                 ),
               ),
-              SizedBox(height: 14,),
               TextFormField(
                 keyboardType: TextInputType.number,
                 controller: prixController,
@@ -385,7 +403,7 @@ class _Details extends State<Details> {
 
                     hintStyle: TextStyle(color: Colors.grey),
                     suffix: IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue,),
+                        icon: Icon(Icons.edit, color: kPrimaryColor,),
                         onPressed: () {
                           setState(() {
                             readprix = false;
@@ -395,7 +413,6 @@ class _Details extends State<Details> {
                     prefixStyle: TextStyle(color: Colors.black)
                 ),
               ),
-              SizedBox(height: 14,),
               TextFormField(
                 controller: paysController,
                 readOnly: true,
@@ -415,7 +432,6 @@ class _Details extends State<Details> {
                     prefixStyle: TextStyle(color: Colors.black)
                 ),
               ),
-              SizedBox(height: 14,),
               TextFormField(
                 controller: quartierController,
                 readOnly: readquartier,
@@ -432,7 +448,7 @@ class _Details extends State<Details> {
                 decoration: InputDecoration(
                     hintStyle: TextStyle(color: Colors.grey),
                     suffix: IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue,),
+                        icon: Icon(Icons.edit, color: kPrimaryColor,),
                         onPressed: () {
                           setState(() {
                             readdesc = false;
@@ -442,14 +458,13 @@ class _Details extends State<Details> {
                     prefixStyle: TextStyle(color: Colors.black),
                 ),
               ),
-              SizedBox(height: 14,),
               TextFormField(
                 controller: superficieController,
                 readOnly: readsuperficie,
                 decoration: InputDecoration(
                     hintStyle: TextStyle(color: Colors.grey),
                     suffix: IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue,),
+                        icon: Icon(Icons.edit, color: kPrimaryColor,),
                         onPressed: () {
                           setState(() {
                             readsuperficie = false;
@@ -460,14 +475,13 @@ class _Details extends State<Details> {
                 ),
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 14,),
               TextFormField(
                 controller: nbetagecontroller,
                 readOnly: readnbetage,
                 decoration: InputDecoration(
                     hintStyle: TextStyle(color: Colors.grey),
                     suffix: IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue,),
+                        icon: Icon(Icons.edit, color: kPrimaryColor,),
                         onPressed: () {
                           setState(() {
                             readnbetage = false;
@@ -478,31 +492,31 @@ class _Details extends State<Details> {
                 ),
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 14,),
+              widget.annonce.nbsalon.isNotEmpty?
               TextFormField(
-                controller: nbpiececontroller,
+                controller: nbsalon,
                 readOnly: readnbpiece,
                 decoration: InputDecoration(
                     hintStyle: TextStyle(color: Colors.grey),
                     suffix: IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue,),
+                        icon: Icon(Icons.edit, color: kPrimaryColor,),
                         onPressed: () {
                           setState(() {
                             readnbpiece = false;
                           });
                         }),
-                    prefixText: 'Nombre de Pièces:   ',
+                    prefixText: 'Nombre de salon:   ',
                     prefixStyle: TextStyle(color: Colors.black)
                 ),
-              ),
-              SizedBox(height: 14,),
+              ):Container(),
+              widget.annonce.nbchambre.isNotEmpty?
               TextFormField(
-                controller: nbchambrecontroller,
+                controller: nbchambre,
                 readOnly: readbnchambre,
                 decoration: InputDecoration(
                     hintStyle: TextStyle(color: Colors.grey),
                     suffix: IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue,),
+                        icon: Icon(Icons.edit, color: kPrimaryColor,),
                         onPressed: () {
                           setState(() {
                             readbnchambre = false;
@@ -512,62 +526,122 @@ class _Details extends State<Details> {
                     prefixStyle: TextStyle(color: Colors.black)
                 ),
                 keyboardType: TextInputType.number,
-              ),
-              SizedBox(height: 14,),
+              ):Container(),
+              widget.annonce.nbsalledebain.isNotEmpty?
               TextFormField(
-                controller: nbsallebaincontroller,
+                controller: nbsalledebain,
                 readOnly: readnbbain,
                 decoration: InputDecoration(
                     hintStyle: TextStyle(color: Colors.grey),
                     suffix: IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue,),
+                        icon: Icon(Icons.edit, color: kPrimaryColor,),
                         onPressed: () {
                           setState(() {
                             readnbbain = false;
                           });
                         }),
-                    prefixText: 'Nombre de salles de bain:   ',
+                    prefixText: 'Nombre de salle de bain:   ',
                     prefixStyle: TextStyle(color: Colors.black)
                 ),
                 keyboardType: TextInputType.number,
-              ),
+              ):Container(),
               SizedBox(height: 14,),
-              TextFormField(
-                controller: nbtoilvisiteurcontroller,
-                readOnly: readtoil,
-                decoration: InputDecoration(
-                    hintStyle: TextStyle(color: Colors.grey),
-                    suffix: IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue,),
-                        onPressed: () {
-                          setState(() {
-                            readtoil = false;
-                          });
-                        }),
-                    prefixText: 'Nombre de toillettes visiteurs:   ',
-                    prefixStyle: TextStyle(color: Colors.black)
-                ),
-                keyboardType: TextInputType.number,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      padding: EdgeInsets.all(5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Nouvelle construction:",style:TextStyle(color:kTextLigthtColor)
+                          ),
+                          widget.annonce.newconstruire!=""? Text(widget.annonce.newconstruire,style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)
+                          ):Text("Non",style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)),
+                        ],
+                      )
+                  ),
+                  Container(
+                      padding: EdgeInsets.all(5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Dépendance/Boyerie:",style:TextStyle(color:kTextLigthtColor,)
+                          ),
+                          widget.annonce.dependance!=""? Text(widget.annonce.dependance,style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)
+                          ):Text("Non",style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)),
+                        ],
+                      )
+                  ),
+                  Container(
+                      padding: EdgeInsets.all(5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Garage:",style:TextStyle(color:kTextLigthtColor,)
+                          ),
+                          widget.annonce.garage!=""? Text(widget.annonce.garage,style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)
+                          ):Text("Non",style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)),
+                          SizedBox(width: 5.0,),
+                          Text("Piscine:",style:TextStyle(color:kTextLigthtColor,)
+                          ),
+                          widget.annonce.piscine!=""? Text(widget.annonce.piscine,style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)
+                          ):Text("Non",style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)),
+                        ],
+                      )
+                  ),
+
+                  Container(
+                      margin: EdgeInsets.only(left:20.0,right: 20.0),
+                      padding: EdgeInsets.all(5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Jardin:",style:TextStyle(color:kTextLigthtColor,)
+                          ),
+                          widget.annonce.jardin!=""? Text(widget.annonce.jardin,style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)
+                          ):Text("Non",style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)),
+                          SizedBox(width: 5.0,),
+                          Text("Toilette visiteur:",style:TextStyle(color:kTextLigthtColor,)
+                          ),
+                          widget.annonce.toilettevisiteur!=""? Text(widget.annonce.toilettevisiteur,style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)
+                          ):Text("Non",style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)),
+                        ],
+                      )
+                  ),
+                  Container(
+                      margin: EdgeInsets.only(left:20.0,right: 20.0),
+                      padding: EdgeInsets.all(5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Débarras:",style:TextStyle(color:kTextLigthtColor,)
+                          ),
+                          widget.annonce.debarras!=""? Text(widget.annonce.debarras,style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)
+                          ):Text("Non",style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)),
+                          SizedBox(width: 5.0,),
+                          Text("Arrière-cours:",style:TextStyle(color:kTextLigthtColor)
+                          ),
+                          widget.annonce.arrierecours!=""? Text(widget.annonce.arrierecours,style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)
+                          ):Text("Non",style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)),
+                        ],
+                      )
+                  ),
+                  Container(
+                      margin: EdgeInsets.only(left:20.0,right: 20.0),
+                      padding: EdgeInsets.all(5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Terasse/Balcon:",style:TextStyle(color:kTextLigthtColor,)
+                          ),
+                          widget.annonce.balcon!=""? Text(widget.annonce.balcon,style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)
+                          ):Text("Non",style:TextStyle(color:kTextLigthtColor,fontWeight: FontWeight.bold,)),
+                        ],
+                      )
+                  ),
+                ],
               ),
-              SizedBox(height: 14,),
-              TextFormField(
-                controller: nbsallesejourcontroller,
-                readOnly: readsejour,
-                decoration: InputDecoration(
-                    hintStyle: TextStyle(color: Colors.grey),
-                    suffix: IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue,),
-                        onPressed: () {
-                          setState(() {
-                            readsejour = false;
-                          });
-                        }),
-                    prefixText: 'Nombre de salon:   ',
-                    prefixStyle: TextStyle(color: Colors.black)
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              SizedBox(height: 16,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[

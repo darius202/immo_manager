@@ -36,7 +36,7 @@ dependencies:
   image_picker: ^0.6.7+4
   country_list_pick: ^1.0.0+3
   grouped_buttons: ^1.0.4
-  connectivity: ^0.4.9+2
+  carousel_pro: ^1.0.0
 
 
 dev_dependencies:
@@ -67,6 +67,10 @@ flutter:
     - assets/vente.png
     - assets/location.png
     - assets/icone.png
+    - assets/chambre.png
+    - assets/bain.png
+    - assets/salon.png
+    - assets/cuisine.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
