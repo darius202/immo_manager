@@ -1,4 +1,4 @@
-# wimmoadmin
+# immo_manager
 
 A new Flutter application.
 

@@ -166,26 +166,6 @@ class _ProfilePageState extends State
                             )
                           ]),
                       SizedBox(height: 80.0),
-                      Container(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 1.3,
-                        decoration: new BoxDecoration(
-                          color: Colors.white,
-                        ),
-                        child: Card(
-                          color: kPrimaryColor,
-                          elevation: 5.0,
-                          child:  FlatButton(
-                            onPressed: (){
-                              Navigator.push(context, SlideRightRoute(page: ProfilModif()));
-                            },
-                            child: Text("ACTUALISER",
-                              style: TextStyle(color: Colors.white, fontSize: 18,fontFamily: "Monteserrat"),),
-                          ),
-                        )
-                      ),
                     ],
                   ),
                 ),

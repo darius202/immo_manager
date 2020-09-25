@@ -6,15 +6,11 @@ import 'package:immo_manager/constants.dart';
 import 'package:immo_manager/home.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:immo_manager/navigationDrawer.dart';
-import 'package:immo_manager/photo.dart';
 import 'package:immo_manager/services/Services.dart';
 import 'package:immo_manager/transition.dart';
 import 'dart:io';
 class Vente extends StatefulWidget {
-  User user;
-  Vente(User user){
-    this.user=user;
-  }
+
   @override
   _VenteState createState() => _VenteState();
 }
@@ -24,8 +20,6 @@ class _VenteState extends State<Vente> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   static const String parcelle = "Parcelle";
   static const String villa = "Maison ou Villa";
-  static const String appartement = "Appartement";
-  static const String bureau = "Bureau ou Boutique";
   //Pays  variables
   List <Pays> _pays = List();
   String _paysselected = "";
@@ -88,7 +82,10 @@ class _VenteState extends State<Vente> {
 
   List<ImageUploadModel> uploader = List();
 
-
+  ImageUploadModel imageUpload1 = new ImageUploadModel();
+  ImageUploadModel imageUpload2 = new ImageUploadModel();
+  ImageUploadModel imageUpload3 = new ImageUploadModel();
+  ImageUploadModel imageUpload4 = new ImageUploadModel();
   _getMandat() {
     setState(() {
       _mandat = mandat;
@@ -129,23 +126,15 @@ class _VenteState extends State<Vente> {
     try {
       Dialogs.showLoadingDialog(context, _keyLoader);//invoking login
       Navigator.of(_keyLoader.currentContext,rootNavigator: true).pop();//close the dialoge
-      Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) =>  Home(),
-      )
-      );
     } catch (error) {
       print(error);
     }
   }
-  ImageUploadModel imageUpload1 = new ImageUploadModel();
-  ImageUploadModel imageUpload2 = new ImageUploadModel();
-  ImageUploadModel imageUpload3 = new ImageUploadModel();
-  ImageUploadModel imageUpload4 = new ImageUploadModel();
 
 
   void _onLoading() {
     _handleSubmit(context);
-    if(negoce=="")
+    if(negoce==""|| negoce=="[]")
       negoce="Prix négociable";
     if(type_bienController!=parcelle){
       if(newconstruire!="")
@@ -209,8 +198,7 @@ class _VenteState extends State<Vente> {
         reussi();
 
       }else{
-        Navigator.pop(context);
-       _showMessageInScaffold2("Annonce non publiée...");
+       Navigator.pop(context);
       }
     });
   }
@@ -1277,8 +1265,8 @@ class _VenteState extends State<Vente> {
                 actions: <Widget>[
                   new FlatButton(onPressed: () {
                     Navigator.pop(context);
-                    Navigator.pushReplacement(context, SlideRightRoute(page: Home()));
-                  },
+                   _initialisation();
+                   },
                       child: new Text("OK",style: TextStyle(color: kPrimaryColor),)
                   ),
                 ],
@@ -1329,8 +1317,7 @@ class _VenteState extends State<Vente> {
               children: <Widget>[
                 uploader[index].imageFile !=null ?
                 Image.file(
-                  uploader[index].imageFile!=null?
-                  uploader[index].imageFile:"",
+                  uploader[index].imageFile,
                   width: 300,
                   height: 300,
                 ):Container(),

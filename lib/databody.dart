@@ -264,7 +264,7 @@ class _DataBodyState extends State<DataBody> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        filtreAnnonce[index].prix!=null? moneyFormat(filtreAnnonce[index].prix)+" Fcfa ":'Connexion impossible...',
+                                        filtreAnnonce[index].prix!=null ? moneyFormat(filtreAnnonce[index].prix)+" Fcfa ":'Connexion impossible...',
                                         style: TextStyle(
                                             fontSize: 18.0,
                                             color: Colors.red,

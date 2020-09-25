@@ -10,10 +10,6 @@ import 'package:immo_manager/services/Services.dart';
 import 'package:immo_manager/transition.dart';
 import 'dart:io';
 class Location extends StatefulWidget {
-  User user;
-  Location(User user){
-    this.user=user;
-  }
   @override
   _LocationState createState() => _LocationState();
 }
@@ -123,10 +119,6 @@ class _LocationState extends State<Location> {
     try {
       Dialogs.showLoadingDialog(context, _keyLoader);//invoking login
       Navigator.of(_keyLoader.currentContext,rootNavigator: true).pop();//close the dialoge
-      Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) =>  Home(),
-      )
-      );
     } catch (error) {
       print(error);
     }
@@ -164,7 +156,7 @@ class _LocationState extends State<Location> {
 
   void _onLoading() {
     _handleSubmit(context);
-    if(negoce=="")
+    if(negoce=="" || negoce=="[]")
       negoce="Prix négociable";
     if(newconstruire!="")
       newconstruire="oui";
@@ -193,7 +185,6 @@ class _LocationState extends State<Location> {
         ascensseur="oui";
     }
     if(type_bienController==appartement){
-
       if(compteurperso!="")
         compteurperso="oui";
       if(arrierecours!="")
@@ -205,8 +196,8 @@ class _LocationState extends State<Location> {
       if(meuble!="")
         meuble="oui";
     }
-    annoncesService.addProduit(widget.user.id,
-        widget.user.contact,
+    annoncesService.addProduit(user[0].id,
+       user[0].contact,
         intituleController,
         type_bienController,
         "Location",
@@ -239,14 +230,13 @@ class _LocationState extends State<Location> {
         uploader[1].imageFile,
         uploader[2].imageFile,
         uploader[3].imageFile,
-        widget.user.pseudo).then((value) {
+        user[0].pseudo).then((value) {
       if ("1" == value) {
         Navigator.pop(context);
         reussi();
-
       }else{
         Navigator.pop(context);
-        _showMessageInScaffold2("Annonce non publiée...");
+
       }
     });
   }
@@ -1780,8 +1770,6 @@ class _LocationState extends State<Location> {
                     if (_formKey.currentState.validate()) {
                       _onLoading();
                     }
-                    setState(() {
-                    });
                   },
                   child: Text("PUBLIER",
                     style: TextStyle(color: Colors.white, fontSize: 18,fontFamily: "Monteserrat"),),
@@ -1809,8 +1797,8 @@ class _LocationState extends State<Location> {
                 actions: <Widget>[
                   new FlatButton(onPressed: () {
                     Navigator.pop(context);
-                    Navigator.pushReplacement(context, SlideRightRoute(page: Home()));
-                  },
+                   _initialisation();
+                   },
                       child: new Text("OK",style: TextStyle(color: kPrimaryColor),)
                   ),
                 ],
@@ -1859,12 +1847,12 @@ class _LocationState extends State<Location> {
             clipBehavior: Clip.antiAlias,
             child: Stack(
               children: <Widget>[
+                uploader[index].imageFile !=null ?
                 Image.file(
-                  uploader[index].imageFile!=null?
-                  uploader[index].imageFile:"",
+                  uploader[index].imageFile,
                   width: 300,
                   height: 300,
-                ),
+                ):Container(),
                 Positioned(
                   right: 5,
                   top: 5,

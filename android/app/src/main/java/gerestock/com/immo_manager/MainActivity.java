@@ -1,4 +1,4 @@
-package gerestock.com.wimmoadmin;
+package gerestock.com.immo_manager;
 
 import io.flutter.embedding.android.FlutterActivity;
 

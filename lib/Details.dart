@@ -652,12 +652,12 @@ class _Details extends State<Details> {
                             .size
                             .width / 1.5,
                         child: widget.annonce.image1 == null ? Text(
-                            "Aucune image") : Column(
+                            "Aucune image(1)", style: TextStyle(color: Colors.red,fontSize:16,fontWeight: FontWeight.bold),) : Column(
                           children: [
                             Image.network(path1,fit: BoxFit.cover,
                               loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
                                 if (loadingProgress == null) return child;
-                                return widget.annonce.image1 ==""? Text("Aucune image"):Center(
+                                return widget.annonce.image1 ==""? Text("Aucune image(1)",style: TextStyle(color: Colors.red,fontSize:16,fontWeight: FontWeight.bold),):Center(
                                   child: CircularProgressIndicator(
                                     value: loadingProgress.expectedTotalBytes != null ?
                                     loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
@@ -671,11 +671,8 @@ class _Details extends State<Details> {
                               child: _image1 == null
                                   ? Container(
                                 margin: EdgeInsets.all(5.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white70,
-                                ),
                                 //padding: EdgeInsets.all(10.0),
-                                child: Center(child: Text("Charger image1",
+                                child: Center(child: Text("",
                                   style: TextStyle(color: Colors.red,
                                       fontStyle: FontStyle.italic),),),
                                 width: MediaQuery
@@ -689,9 +686,6 @@ class _Details extends State<Details> {
                               )
                                   : Container(
                                   margin: EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white70,
-                                  ),
                                   padding: EdgeInsets.all(5.0),
                                   child: Column(
                                     children: <Widget>[
@@ -717,13 +711,8 @@ class _Details extends State<Details> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 RaisedButton(
-                                  onPressed: getImageCamera,
-                                  child: Icon(
-                                      Icons.add_a_photo, color: Colors.blue),
-                                ),
-                                RaisedButton(
                                   onPressed: getImageGallery,
-                                  child: Icon(Icons.image, color: Colors.blue),
+                                  child: Text("Remplacez la première image",style:TextStyle(color: kPrimaryColor) ),
                                 ),
                               ],
                             ),
@@ -744,12 +733,12 @@ class _Details extends State<Details> {
                           .size
                           .width / 1.5,
                       child: widget.annonce.image2 ==null? Text(
-                          "Aucune image") : Column(
+                          "Aucune image(2)",style: TextStyle(color: Colors.red,fontSize:16,fontWeight: FontWeight.bold),) : Column(
                         children: [
                           Image.network(path2,fit: BoxFit.cover,
                             loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
                               if (loadingProgress == null) return child;
-                              return widget.annonce.image2 ==""? Text("Aucune image"): Center(
+                              return widget.annonce.image2 ==""? Text("Aucune image(2)",style: TextStyle(color: Colors.red,fontSize:16,fontWeight: FontWeight.bold),): Center(
                                 child: CircularProgressIndicator(
                                   value: loadingProgress.expectedTotalBytes != null ?
                                   loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
@@ -762,11 +751,8 @@ class _Details extends State<Details> {
                             child: _image2 == null
                                 ? Container(
                               margin: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white70,
-                              ),
                               padding: EdgeInsets.all(10.0),
-                              child: Center(child: Text("Charger image2",
+                              child: Center(child: Text("",
                                 style: TextStyle(color: Colors.red,
                                     fontStyle: FontStyle.italic),),),
                               width: MediaQuery
@@ -780,9 +766,6 @@ class _Details extends State<Details> {
                             )
                                 : Container(
                                 margin: EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white70,
-                                ),
                                 padding: EdgeInsets.all(5.0),
                                 child: Column(
                                   children: <Widget>[
@@ -808,13 +791,8 @@ class _Details extends State<Details> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               RaisedButton(
-                                onPressed: getImageCamera2,
-                                child: Icon(
-                                    Icons.add_a_photo, color: Colors.blue),
-                              ),
-                              RaisedButton(
                                 onPressed: getImageGallery2,
-                                child: Icon(Icons.image, color: Colors.blue),
+                                child: Text("Remplacez la deuxième image",style:TextStyle(color: kPrimaryColor) ),
                               ),
                             ],
                           ),
@@ -835,13 +813,13 @@ class _Details extends State<Details> {
                           .size
                           .width /1.5,
                       child: widget.annonce.image3 == null ? Text(
-                          "Aucune image") :
+                          "Aucune image(3)",style: TextStyle(color: Colors.red,fontSize:16,fontWeight: FontWeight.bold),) :
                       Column(
                         children: [
                           Image.network(path3,fit: BoxFit.cover,
                             loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
                               if (loadingProgress == null) return child;
-                              return widget.annonce.image3 ==""? Text("Aucune image"): Center(
+                              return widget.annonce.image3 ==""? Text("Aucune image(3)",style: TextStyle(color: Colors.red,fontSize:16,fontWeight: FontWeight.bold),): Center(
                                 child: CircularProgressIndicator(
                                   value: loadingProgress.expectedTotalBytes != null ?
                                   loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
@@ -854,11 +832,8 @@ class _Details extends State<Details> {
                             child: _image3 == null
                                 ? Container(
                               margin: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white70,
-                              ),
                               padding: EdgeInsets.all(10.0),
-                              child: Center(child: Text("Charger image3",
+                              child: Center(child: Text("",
                                 style: TextStyle(color: Colors.red,
                                     fontStyle: FontStyle.italic),),),
                               width: MediaQuery
@@ -872,9 +847,6 @@ class _Details extends State<Details> {
                             )
                                 : Container(
                                 margin: EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white70,
-                                ),
                                 padding: EdgeInsets.all(10.0),
                                 child: Column(
                                   children: <Widget>[
@@ -900,13 +872,8 @@ class _Details extends State<Details> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               RaisedButton(
-                                onPressed: getImageCamera3,
-                                child: Icon(
-                                    Icons.add_a_photo, color: Colors.blue),
-                              ),
-                              RaisedButton(
                                 onPressed: getImageGallery3,
-                                child: Icon(Icons.image, color: Colors.blue),
+                                child:  Text("Remplacez la troisième image",style:TextStyle(color: kPrimaryColor) ),
                               ),
                             ],
                           ),
@@ -927,13 +894,13 @@ class _Details extends State<Details> {
                           .size
                           .width /1.5,
                       child: widget.annonce.image4 == null ? Text(
-                          "Aucune image") :
+                          "Aucune image(4)",style: TextStyle(color: Colors.red,fontSize:16,fontWeight: FontWeight.bold),) :
                       Column(
                         children: [
                           Image.network(path4,fit: BoxFit.cover,
                             loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
                               if (loadingProgress == null) return child;
-                              return widget.annonce.image4 ==""? Text("Aucune image"): Center(
+                              return widget.annonce.image4 ==""? Text("Aucune image(4)",style: TextStyle(color: Colors.red,fontSize:16,fontWeight: FontWeight.bold),): Center(
                                 child: CircularProgressIndicator(
                                   value: loadingProgress.expectedTotalBytes != null ?
                                   loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
@@ -947,11 +914,8 @@ class _Details extends State<Details> {
                             child: _image4 == null
                                 ? Container(
                               margin: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white70,
-                              ),
                               padding: EdgeInsets.all(10.0),
-                              child: Center(child: Text("Charger image4",
+                              child: Center(child: Text("",
                                 style: TextStyle(color: Colors.red,
                                     fontStyle: FontStyle.italic),),),
                               width: MediaQuery
@@ -965,9 +929,6 @@ class _Details extends State<Details> {
                             )
                                 : Container(
                                 margin: EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white70,
-                                ),
                                 padding: EdgeInsets.all(10.0),
                                 child: Column(
                                   children: <Widget>[
@@ -993,13 +954,8 @@ class _Details extends State<Details> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               RaisedButton(
-                                onPressed: getImageCamera4,
-                                child: Icon(
-                                    Icons.add_a_photo, color: Colors.blue),
-                              ),
-                              RaisedButton(
                                 onPressed: getImageGallery4,
-                                child: Icon(Icons.image, color: Colors.blue),
+                                child: Text("Remplacez la dernière image",style:TextStyle(color: kPrimaryColor) ),
                               ),
                             ],
                           ),
@@ -1016,7 +972,7 @@ class _Details extends State<Details> {
       ),
       floatingActionButton: FloatingActionButton(
           elevation: 4.0,
-          backgroundColor: Colors.blue,
+          backgroundColor: kPrimaryColor,
           child: Icon(Icons.check, size: 30,),
           onPressed: () {
             setState(() {
@@ -1034,8 +990,8 @@ class _Details extends State<Details> {
             barrierDismissible: false,
             builder: (BuildContext context) {
               return new AlertDialog(
-                title: new Text("Modifications"),
-                content: new Text("Voulez vous modifier ?"),
+                title: new Text("Modifications",style: TextStyle(color: kPrimaryColor)),
+                content: new Text("   Voulez vous modifier ?"),
                 contentPadding: EdgeInsets.all(5.0),
                 actions: <Widget>[
                   new FlatButton(onPressed: () {
@@ -1060,7 +1016,7 @@ class _Details extends State<Details> {
                     widget.annonce.type_mandat = textHolder;
                     _onLoading(widget.annonce, image1, image2, image3,image4);
                   },
-                      child: new Text("Valider")
+                      child: new Text("Valider",style: TextStyle(color: kPrimaryColor))
                   ),
                   new FlatButton(onPressed: () {
                     Navigator.pop(context);
@@ -1082,8 +1038,8 @@ class _Details extends State<Details> {
             barrierDismissible: false,
             builder: (BuildContext context) {
               return new AlertDialog(
-                title: new Text("Succès",style: TextStyle(color:Colors.blue)),
-                content: new Text("   Modifiactions éffectuées, actualisez pour voir les modifications"),
+                title: new Text("Effectuées",style: TextStyle(color:kPrimaryColor)),
+                content: new Text("    Modifiactions éffectuées"),
                 contentPadding: EdgeInsets.all(5.0),
                 actions: <Widget>[
                   new FlatButton(onPressed: () {

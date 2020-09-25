@@ -39,7 +39,7 @@ class _HomeState extends State<Home> {
             children: [
               GestureDetector(
                 onTap: (){
-                  Navigator.push(context, SlideRightRoute(page: Vente(user[0])));
+                  Navigator.push(context, SlideRightRoute(page: Vente()));
                 },
                 child: Container(
                   padding: EdgeInsets.all(20.0),
@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
 
               GestureDetector(
                 onTap: (){
-                  Navigator.push(context, SlideRightRoute(page: Location(user[0])));
+                  Navigator.push(context, SlideRightRoute(page: Location()));
                 },
                 child: Container(
                   padding: EdgeInsets.all(20.0),

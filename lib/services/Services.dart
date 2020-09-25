@@ -41,7 +41,7 @@ class annoncesService{
   //AJOUT DE PRODUITS A LA BASE DE DONNEES
   static Future<String> addProduit(String idadmin, String admincontact,String intitule_bien, String type_bien,String type_mandat,String superficie,String pays,
       String ville,String quartier,String description, String prix, String negoce,String situationadministrative,String nbetage,String nbsalon,String nbchambre,String nbcuisine,String nbsalledebain,String newconstruire,
-     String dependance,String garage,String piscine,String jardin, String toilettevisiteur,String 	debarras,String compteurperso,String arrierecours,String 	balcon,String meuble,String ascensseur,
+     String dependance,String garage,String piscine,String jardin, String toilettevisiteur,String debarras,String compteurperso,String arrierecours,String balcon,String meuble,String ascensseur,
       File imageFile,File imageFile2,File imageFile3,File imageFile4,String user ) async{
     try{
       String nom1="";
