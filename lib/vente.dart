@@ -199,6 +199,7 @@ class _VenteState extends State<Vente> {
 
       }else{
        Navigator.pop(context);
+       _showMessageInScaffold2("Annonce non plubliée");
       }
     });
   }
@@ -1303,6 +1304,7 @@ class _VenteState extends State<Vente> {
   }
   Widget buildGridView() {
     return GridView.count(
+      physics: new NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       crossAxisCount: 3,
       childAspectRatio: 1,

@@ -61,25 +61,20 @@ class _DataTables extends State<DataTables>{
       print(error);
     }
   }
-  _getAnnonce(){
-    if(filtreAnnonce.length==0){
+    _getAnnonce(){
       setState(() {
-        _handleSubmit(context);
         annoncesService.getProduit(user[0].id).then((annonce){
           if(annonce.length!=0){
             setState(() {
               annonces=annonce;
               filtreAnnonce=annonces;
-              Navigator.pop(context);
             });
           }else{
-            Navigator.pop(context);
+
           }
         } );
       });
-
     }
-  }
 
   @override
   Widget build(BuildContext context){

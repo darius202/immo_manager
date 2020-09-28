@@ -151,6 +151,8 @@ class _LocationState extends State<Location> {
    uploader[1].imageFile=null;
    uploader[2].imageFile=null;
    uploader[3].imageFile=null;
+   _villeselected="";
+   _paysselected="";
     });
  }
 
@@ -236,7 +238,7 @@ class _LocationState extends State<Location> {
         reussi();
       }else{
         Navigator.pop(context);
-
+        _showMessageInScaffold2("Annonce non plubliée");
       }
     });
   }
@@ -298,6 +300,36 @@ class _LocationState extends State<Location> {
       uploader.add(imageUpload3);
       uploader.add(imageUpload4);
     });
+  }
+  initiApresenvoie(){
+    setState(() {
+    negoce="";
+    situationadministrativeController="";
+    newconstruire="";
+    dependance="";
+    garage="";
+    piscine="";
+    jardin="";
+    toilettevisiteur="";
+    debarras="";
+    compteurperso="";
+    arrierecours="";
+    balcon="";
+    meuble="";
+    ascensseur="";
+    superficieController="";
+    chambreController.text="";
+    salonController.text="";
+    cuisineController.text="";
+    bainController.text="";
+    prixController.text="";
+    DescriptifController="";
+    nbetageController.text="";
+    uploader[0].imageFile=null;
+    uploader[1].imageFile=null;
+    uploader[2].imageFile=null;
+    uploader[3].imageFile=null;
+  });
   }
   @override
   Widget build(BuildContext context) {
@@ -1797,7 +1829,7 @@ class _LocationState extends State<Location> {
                 actions: <Widget>[
                   new FlatButton(onPressed: () {
                     Navigator.pop(context);
-                   _initialisation();
+                   initiApresenvoie();
                    },
                       child: new Text("OK",style: TextStyle(color: kPrimaryColor),)
                   ),
@@ -1835,6 +1867,7 @@ class _LocationState extends State<Location> {
   }
   Widget buildGridView() {
     return GridView.count(
+      physics: new NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       crossAxisCount: 3,
       childAspectRatio: 1,
