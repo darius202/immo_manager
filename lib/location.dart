@@ -53,6 +53,9 @@ class _LocationState extends State<Location> {
   TextEditingController salonController;
   //Cuisine  variables
   TextEditingController cuisineController;
+  TextEditingController boutiqueController;
+  TextEditingController magasinController;
+  TextEditingController hallController;
   // Salle de bain achat variables
   TextEditingController bainController;
   //Prix variables
@@ -200,6 +203,7 @@ class _LocationState extends State<Location> {
     }
     annoncesService.addProduit(user[0].id,
        user[0].contact,
+        user[0].pseudo,
         intituleController,
         type_bienController,
         "Location",
@@ -215,6 +219,9 @@ class _LocationState extends State<Location> {
         salonController.text,
         chambreController.text,
         cuisineController.text,
+        boutiqueController.text,
+        magasinController.text,
+        hallController.text,
         bainController.text,
         newconstruire,
         dependance,
@@ -250,12 +257,17 @@ class _LocationState extends State<Location> {
     chambreController = TextEditingController();
     salonController= TextEditingController();
     cuisineController= TextEditingController();
+    boutiqueController=TextEditingController();
+    magasinController=TextEditingController();
+    hallController=TextEditingController();
     bainController= TextEditingController();
     prixController= TextEditingController();
     DescriptifController="";
     nbetageController=TextEditingController();
     intituleController="";
-
+    boutiqueController.text="";
+    magasinController.text="";
+    hallController.text="";
     superficieController="";
     chambreController.text="";
     salonController.text="";
@@ -715,11 +727,6 @@ class _LocationState extends State<Location> {
                               hintText: "Salon",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (String value){
-                          if(value.isEmpty){
-                            return "Nombre de salon";
-                          }
-                        },
                       ),
                     ),
                     SizedBox(width: 20.0,),
@@ -732,11 +739,6 @@ class _LocationState extends State<Location> {
                               hintText: "Chambre",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (String value){
-                          if(value.isEmpty){
-                            return "Nombre de chambre";
-                          }
-                        },
                       ),
                     ),
                   ],
@@ -763,11 +765,6 @@ class _LocationState extends State<Location> {
                               hintText: "Cuisine",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (String value){
-                          if(value.isEmpty){
-                            return "Nombre de cuisine";
-                          }
-                        },
                       ),
                     ),
                     SizedBox(width: 20.0,),
@@ -780,11 +777,6 @@ class _LocationState extends State<Location> {
                               hintText: "Salle de bain",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (String value){
-                          if(value.isEmpty){
-                            return "Nombre de salle de bain";
-                          }
-                        },
                       ),
                     ),
                   ],
@@ -850,7 +842,7 @@ class _LocationState extends State<Location> {
                     new Flexible(
                       child: new TextFormField(
                         textCapitalization: TextCapitalization.sentences,
-                          maxLines: 4,
+                          maxLines: null,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                               hintText: "Descriptif",
@@ -1145,11 +1137,6 @@ class _LocationState extends State<Location> {
                               hintText: "Salon",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (String value){
-                          if(value.isEmpty){
-                            return "Nombre de salon";
-                          }
-                        },
                       ),
                     ),
                     SizedBox(width: 20.0,),
@@ -1162,11 +1149,6 @@ class _LocationState extends State<Location> {
                               hintText: "Chambre",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (String value){
-                          if(value.isEmpty){
-                            return "Nombre de chambre";
-                          }
-                        },
                       ),
                     ),
                   ],
@@ -1193,11 +1175,6 @@ class _LocationState extends State<Location> {
                               hintText: "Cuisine",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (String value){
-                          if(value.isEmpty){
-                            return "Nombre de cuisine";
-                          }
-                        },
                       ),
                     ),
                     SizedBox(width: 20.0,),
@@ -1210,13 +1187,71 @@ class _LocationState extends State<Location> {
                               hintText: "Salle de bain",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (String value){
-                          if(value.isEmpty){
-                            return "Nombre de salle de bain";
-                          }
-                        },
                       ),
                     ),
+                  ],
+                ),
+              ),
+              Container(
+                decoration: new BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    right: BorderSide(width: 0.5, color: Colors.grey),
+                  ),
+                ),
+                height: 45.0,
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
+                child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    new Flexible(
+                      child: new TextFormField(
+                        controller: boutiqueController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
+                            hintText: "Boutique",
+                            contentPadding: EdgeInsets.all(10)
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20.0,),
+                    new Flexible(
+                      child: new TextFormField(
+                        controller: magasinController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
+                            hintText: "Magasin",
+                            contentPadding: EdgeInsets.all(10)
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                decoration: new BoxDecoration(
+                  color: Colors.white,
+                ),
+                height: 45.0,
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
+                child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    SizedBox(width: 40.0,),
+                    new Flexible(
+                      child: new TextFormField(
+                        controller: hallController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
+                            hintText: "Hall",
+                            contentPadding: EdgeInsets.all(10)
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 40.0,),
                   ],
                 ),
               ),
@@ -1280,7 +1315,7 @@ class _LocationState extends State<Location> {
                     new Flexible(
                       child: new TextFormField(
                         textCapitalization: TextCapitalization.sentences,
-                          maxLines: 4,
+                          maxLines: null,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                               hintText: "Descriptif",
@@ -1572,11 +1607,6 @@ class _LocationState extends State<Location> {
                               hintText: "Nombre de pièce",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (String value){
-                          if(value.isEmpty){
-                            return "Nombre de pièce";
-                          }
-                        },
                       ),
                     ),
                     SizedBox(width: 20.0,),
@@ -1589,11 +1619,6 @@ class _LocationState extends State<Location> {
                               hintText: "Salle de bain",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (String value){
-                          if(value.isEmpty){
-                            return "Nombre de salle de bain";
-                          }
-                        },
                       ),
                     ),
                   ],
@@ -1660,7 +1685,7 @@ class _LocationState extends State<Location> {
                       child: new TextFormField(
                         textCapitalization: TextCapitalization.sentences,
                         autocorrect: true,
-                          maxLines: 4,
+                          maxLines: null,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                               hintText: "Descriptif",

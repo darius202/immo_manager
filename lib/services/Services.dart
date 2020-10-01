@@ -7,6 +7,7 @@ import 'package:immo_manager/models/Annonces.dart';
 // ignore: camel_case_types
 class annoncesService{
   static const ROOT ='https://gerestock.com/immo/annonceRequetes.php';
+  static const ROOTIMAGE ='https://gerestock.com/immo/uploadimage.php';
   static const _GET_ALL_ACTION= 'GET_ALL';
   static const _ADD_PROD_ACTION= 'ADD_PROD';
   static const _UPDATE_PROD_ACTION= 'UPDATE_PROD';
@@ -39,8 +40,9 @@ class annoncesService{
 //User
 
   //AJOUT DE PRODUITS A LA BASE DE DONNEES
-  static Future<String> addProduit(String idadmin, String admincontact,String intitule_bien, String type_bien,String type_mandat,String superficie,String pays,
-      String ville,String quartier,String description, String prix, String negoce,String situationadministrative,String nbetage,String nbsalon,String nbchambre,String nbcuisine,String nbsalledebain,String newconstruire,
+  static Future<String> addProduit(String idadmin, String admincontact,String adminpseudo,String intitule_bien, String type_bien,String type_mandat,String superficie,String pays,
+      String ville,String quartier,String description, String prix, String negoce,String situationadministrative,String nbetage,String nbsalon,String nbchambre,
+      String nbcuisine,String  nbboutique,String nbmagasin,String nbhall ,nbsalledebain,String newconstruire,
      String dependance,String garage,String piscine,String jardin, String toilettevisiteur,String debarras,String compteurperso,String arrierecours,String balcon,String meuble,String ascensseur,
       File imageFile,File imageFile2,File imageFile3,File imageFile4,String user ) async{
     try{
@@ -61,7 +63,7 @@ class annoncesService{
         }
         user += "/";
         user += imageFile.path.substring(46);
-        var uri = Uri.parse("https://gerestock.com/immo/uploadimage.php");
+        var uri = Uri.parse(ROOTIMAGE);
         var request = new http.MultipartRequest("POST", uri);
         var multipartFile1 = new http.MultipartFile(
             "image", stream, length, filename: basename(user));
@@ -87,7 +89,7 @@ class annoncesService{
           nom2 = nom2.substring(29);
         }
         user2 += imageFile2.path.substring(46);
-        var uri2 = Uri.parse("https://gerestock.com/immo/uploadimage.php");
+        var uri2 = Uri.parse(ROOTIMAGE);
         var request2 = new http.MultipartRequest("POST", uri2);
         var multipartFile2 = new http.MultipartFile(
             "imagesecond", stream2, length2, filename: basename(user2));
@@ -112,7 +114,7 @@ class annoncesService{
          user3 += "/";
          user3 += imageFile3.path.substring(46);
          var length3 = await imageFile3.length();
-         var uri3 = Uri.parse("https://gerestock.com/immo/uploadimage.php");
+         var uri3 = Uri.parse(ROOTIMAGE);
          var request3 = new http.MultipartRequest("POST", uri3);
          var multipartFile3 = new http.MultipartFile(
              "imagetertiaire", stream3, length3, filename: basename(user3));
@@ -139,7 +141,7 @@ class annoncesService{
           nom4 = nom4.substring(29);
         }
         user4 += imageFile4.path.substring(46);
-        var uri4 = Uri.parse("https://gerestock.com/immo/uploadimage.php");
+        var uri4 = Uri.parse(ROOTIMAGE);
         var request4 = new http.MultipartRequest("POST", uri4);
         var multipartFile4 = new http.MultipartFile(
             "image4", stream4, length4, filename: basename(user4));
@@ -156,6 +158,7 @@ class annoncesService{
       map['action']= _ADD_PROD_ACTION;
       map['idadmin']= idadmin;
       map['admincontact']=admincontact;
+      map['adminpseudo']= adminpseudo;
       map['intitule_bien']= intitule_bien;
       map['type_bien']= type_bien;
       map['type_mandat']= type_mandat;
@@ -171,6 +174,9 @@ class annoncesService{
       map['nbsalon']= nbsalon;
       map['nbchambre']= nbchambre;
       map['nbcuisine']= nbcuisine;
+      map['nbboutique']= nbboutique;
+      map['nbmagasin']=  nbmagasin;
+      map['nbhall']=  nbhall;
       map['nbsalledebain']=  nbsalledebain;
       map['newconstruire']=  newconstruire;
       map['dependance']=  dependance;
@@ -206,7 +212,7 @@ class annoncesService{
     var stream  = new http.ByteStream(imageFile.openRead());
     stream.cast();
     var length= await imageFile.length();
-    var uri = Uri.parse("https://gerestock.com/immo/uploadimage.php");
+    var uri = Uri.parse(ROOTIMAGE);
     var request= new http.MultipartRequest("POST", uri);
     var multipartFile = new http.MultipartFile("image", stream, length,filename: basename(imageFile.path));
    request.files.add(multipartFile);
@@ -238,7 +244,7 @@ class annoncesService{
         }else{
           nom1 = nom1.substring(29);
         }
-        var uri = Uri.parse("https://gerestock.com/immo/uploadimage.php");
+        var uri = Uri.parse(ROOTIMAGE);
         var request= new http.MultipartRequest("POST", uri);
         var multipartFile = new http.MultipartFile("image", stream, length,filename: basename(imageFile.path));
         request.files.add(multipartFile);
@@ -263,7 +269,7 @@ class annoncesService{
         }else{
           nom2 = nom2.substring(29);
         }
-        var uri = Uri.parse("https://gerestock.com/immo/uploadimage.php");
+        var uri = Uri.parse(ROOTIMAGE);
         var request= new http.MultipartRequest("POST", uri);
         var multipartFile = new http.MultipartFile("image", stream, length,filename: basename(imageFile2.path));
         request.files.add(multipartFile);
@@ -287,7 +293,7 @@ class annoncesService{
         }else{
           nom3 = nom3.substring(29);
         }
-        var uri = Uri.parse("https://gerestock.com/immo/uploadimage.php");
+        var uri = Uri.parse(ROOTIMAGE);
         var request= new http.MultipartRequest("POST", uri);
         var multipartFile = new http.MultipartFile("image", stream, length,filename: basename(imageFile3.path));
         request.files.add(multipartFile);
@@ -313,7 +319,7 @@ class annoncesService{
         }else{
           nom4 = nom4.substring(29);
         }
-        var uri = Uri.parse("https://gerestock.com/immo/uploadimage.php");
+        var uri = Uri.parse(ROOTIMAGE);
         var request= new http.MultipartRequest("POST", uri);
         var multipartFile = new http.MultipartFile("image", stream, length,filename: basename(imageFile4.path));
         request.files.add(multipartFile);
@@ -389,6 +395,7 @@ class annoncesService{
 class Userservices{
   static const ROOT ='https://gerestock.com/immo/annonceRequetes.php';
   static const _GET_ALL_ACTION= 'GET_USER';
+  static const ROOTLOCALISATION ='https://gerestock.com/immo/localisation.php';
 
   static Future<List<User>> getUser(String email, String mot_de_passe) async {
     try{
@@ -429,7 +436,7 @@ class Userservices{
       map['quartier']= quartier;
       map['contact']= contact;
       map['representantId']=representantId;
-      final response4 = await http.post('https://gerestock.com/immo/localisation.php',body:map);
+      final response4 = await http.post(ROOTLOCALISATION,body:map);
       print('Voici le message du body AddUser: ${response4.body}');
       if(200 == response4.statusCode){
         return response4.body;

@@ -39,6 +39,7 @@ dependencies:
   carousel_pro: ^1.0.0
 
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -66,6 +67,7 @@ flutter:
     - assets/wimmo.jpg
     - assets/vente.png
     - assets/location.png
+    - assets/hall.png
     - assets/icone.png
     - assets/chambre.png
     - assets/bain.png

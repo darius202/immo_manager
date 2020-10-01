@@ -4,10 +4,8 @@ import 'package:immo_manager/constants.dart';
 import 'package:immo_manager/errorconnect.dart';
 import 'package:immo_manager/login.dart';
 import 'package:immo_manager/models/Annonces.dart';
-import 'package:immo_manager/DataTables.dart';
 import 'package:immo_manager/services/Services.dart';
 import 'package:immo_manager/transition.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override

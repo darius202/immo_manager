@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:immo_manager/Details.dart';
 import 'package:immo_manager/constants.dart';
 import 'package:immo_manager/models/Annonces.dart';
-import 'package:immo_manager/Details.dart';
 import 'package:immo_manager/services/Services.dart';
 class DataBody extends StatefulWidget {
   User user;
@@ -14,7 +13,7 @@ class DataBody extends StatefulWidget {
 }
 
 class _DataBodyState extends State<DataBody> {
-
+  static const String lien = "https://gerestock.com/immo/images/";
   static const String parcelle = "Parcelle";
   static const String villa = "Maison ou Villa";
   static const String appartement = "Appartement";
@@ -139,7 +138,7 @@ class _DataBodyState extends State<DataBody> {
                                       children: <Widget>[
                                         filtreAnnonce[index].image1!=null ?
                                         Image.network(
-                                          "https://gerestock.com/immo/images/"+ filtreAnnonce[index].image1,
+                                          lien+ filtreAnnonce[index].image1,
                                           width: 100,
                                           height: 100,
                                         ):Container(),
@@ -232,6 +231,21 @@ class _DataBodyState extends State<DataBody> {
                                       Text(filtreAnnonce[index].nbsalledebain+" douche"),
                                     ],
                                   ):Container(),
+                                  SizedBox(height: 8.0,),
+                                  filtreAnnonce[index].type_bien==villa?
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      filtreAnnonce[index].nbboutique!=null?
+                                      Text(filtreAnnonce[index].nbboutique+" Boutique",style:TextStyle(fontSize:12,color:kPrimaryColor)):Container(),
+                                      SizedBox(width: 5.0,),
+                                      filtreAnnonce[index].nbmagasin!=null?
+                                      Text(filtreAnnonce[index].nbmagasin+" Magasin",style:TextStyle(fontSize:12,color:kPrimaryColor)):Container(),
+                                      SizedBox(width: 5.0,),
+                                      filtreAnnonce[index].nbhall!=null?
+                                      Text(filtreAnnonce[index].nbhall+" Hall",style:TextStyle(fontSize:12,color:kPrimaryColor)):Container(),
+                                    ],
+                                  ):Container(),
                                   filtreAnnonce[index].type_bien==appartement?
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -264,7 +278,7 @@ class _DataBodyState extends State<DataBody> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        filtreAnnonce[index].prix!=null ? moneyFormat(filtreAnnonce[index].prix)+" Fcfa ":'Connexion impossible...',
+                                        filtreAnnonce[index].prix!=null ?filtreAnnonce[index].prix+" Fcfa ":'Connexion impossible...',
                                         style: TextStyle(
                                             fontSize: 18.0,
                                             color: Colors.red,

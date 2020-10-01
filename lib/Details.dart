@@ -16,6 +16,7 @@ class Details extends StatefulWidget{
 }
 
 class _Details extends State<Details> {
+  static const String lien = "https://gerestock.com/immo/images/";
   static const String parcelle = "Parcelle";
   static const String villa = "Maison ou Villa";
   static const String appartement = "Appartement";

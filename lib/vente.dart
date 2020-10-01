@@ -3,11 +3,9 @@ import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:immo_manager/appbar.dart';
 import 'package:immo_manager/constants.dart';
-import 'package:immo_manager/home.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:immo_manager/navigationDrawer.dart';
 import 'package:immo_manager/services/Services.dart';
-import 'package:immo_manager/transition.dart';
 import 'dart:io';
 class Vente extends StatefulWidget {
 
@@ -55,6 +53,9 @@ class _VenteState extends State<Vente> {
   TextEditingController salonController;
   //Cuisine  variables
   TextEditingController cuisineController;
+  TextEditingController boutiqueController;
+  TextEditingController magasinController;
+  TextEditingController hallController;
   // Salle de bain achat variables
   TextEditingController bainController;
   //Prix variables
@@ -160,6 +161,7 @@ class _VenteState extends State<Vente> {
     }
     annoncesService.addProduit(user[0].id,
         user[0].contact,
+        user[0].pseudo,
         intituleController,
         type_bienController,
         "Vente",
@@ -175,6 +177,9 @@ class _VenteState extends State<Vente> {
         salonController.text!=null?salonController.text:"",
         chambreController.text!=null?chambreController.text:"",
         cuisineController.text!=null?cuisineController.text:"",
+        boutiqueController.text,
+        magasinController.text,
+        hallController.text,
         bainController.text!=null?bainController.text:"",
         newconstruire,
         dependance,
@@ -223,6 +228,9 @@ class _VenteState extends State<Vente> {
       chambreController.text="";
       salonController.text="";
       cuisineController.text="";
+      boutiqueController.text="";
+      magasinController.text="";
+      hallController.text="";
       bainController.text="";
       prixController.text="";
       DescriptifController="";
@@ -244,10 +252,16 @@ class _VenteState extends State<Vente> {
     cuisineController= TextEditingController();
     bainController= TextEditingController();
     prixController= TextEditingController();
+    boutiqueController=TextEditingController();
+    magasinController=TextEditingController();
+    hallController=TextEditingController();
     superficieController.text="";
     chambreController.text="";
     salonController.text="";
     cuisineController.text="";
+    boutiqueController.text="";
+    magasinController.text="";
+    hallController.text="";
     bainController.text="";
     prixController.text="";
     DescriptifController="";
@@ -718,7 +732,7 @@ class _VenteState extends State<Vente> {
                       child: new TextFormField(
                         textCapitalization: TextCapitalization.sentences,
                         autocorrect: true,
-                          maxLines: 4,
+                          maxLines: null,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                               hintText: "Descriptif",
@@ -809,11 +823,6 @@ class _VenteState extends State<Vente> {
                               hintText: "Superficie",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (value){
-                          if(value.isEmpty){
-                            return "Entrer la Superficie ";
-                          }
-                        },
                       ),
                     ),
                   ],
@@ -857,11 +866,6 @@ class _VenteState extends State<Vente> {
                               hintText: "Salon",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (value){
-                          if(value.isEmpty){
-                            return "Nombre de salon ";
-                          }
-                        },
                       ),
                     ),
                     SizedBox(width: 20.0,),
@@ -874,11 +878,6 @@ class _VenteState extends State<Vente> {
                               hintText: "Chambre",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (value){
-                          if(value.isEmpty){
-                            return "Nombre de chambre ";
-                          }
-                        },
                       ),
                     ),
                   ],
@@ -905,11 +904,6 @@ class _VenteState extends State<Vente> {
                               hintText: "Cuisine",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (value){
-                          if(value.isEmpty){
-                            return "Nombre de cuisine ";
-                          }
-                        },
                       ),
                     ),
                     SizedBox(width: 20.0,),
@@ -922,13 +916,71 @@ class _VenteState extends State<Vente> {
                               hintText: "Salle de bain",
                               contentPadding: EdgeInsets.all(10)
                           ),
-                        validator: (value){
-                          if(value.isEmpty){
-                            return "Nombre de salle de bain ";
-                          }
-                        },
                       ),
                     ),
+                  ],
+                ),
+              ),
+              Container(
+                decoration: new BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    right: BorderSide(width: 0.5, color: Colors.grey),
+                  ),
+                ),
+                height: 45.0,
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
+                child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    new Flexible(
+                      child: new TextFormField(
+                        controller: boutiqueController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
+                            hintText: "Boutique",
+                            contentPadding: EdgeInsets.all(10)
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20.0,),
+                    new Flexible(
+                      child: new TextFormField(
+                        controller: magasinController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
+                            hintText: "Magasin",
+                            contentPadding: EdgeInsets.all(10)
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                decoration: new BoxDecoration(
+                  color: Colors.white,
+                ),
+                height: 45.0,
+                margin: const EdgeInsets.only(top:5.0,right: 20.0, left: 20.0),
+                child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    SizedBox(width: 40.0,),
+                    new Flexible(
+                      child: new TextFormField(
+                        controller: hallController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
+                            hintText: "Hall",
+                            contentPadding: EdgeInsets.all(10)
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 40.0,),
                   ],
                 ),
               ),

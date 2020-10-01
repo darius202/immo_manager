@@ -2,6 +2,7 @@ class Annonce{
   String id;
   String idadmin;
   String admincontact;
+  String adminpseudo;
   String intitule_bien;
   String type_bien;
   String type_mandat;
@@ -17,6 +18,9 @@ class Annonce{
   String nbsalon;
   String nbchambre;
   String nbcuisine;
+  String  nbboutique;
+  String nbmagasin;
+  String nbhall;
   String nbsalledebain;
   String newconstruire;
   String dependance;
@@ -36,8 +40,8 @@ class Annonce{
   String image4;
   String date_inscrit;
 
-  Annonce({this.id,this.idadmin,this.admincontact,this.intitule_bien,this.type_bien,this.type_mandat,this.superficie,this.pays,this.ville,this.quartier,
-    this.description,this.prix,this.negoce,this.situationadministrative,this.nbetage,this.nbsalon,this.nbchambre,this.nbcuisine,this.nbsalledebain,this.newconstruire,
+  Annonce({this.id,this.idadmin,this.admincontact,this.adminpseudo,this.intitule_bien,this.type_bien,this.type_mandat,this.superficie,this.pays,this.ville,this.quartier,
+    this.description,this.prix,this.negoce,this.situationadministrative,this.nbetage,this.nbsalon,this.nbchambre,this.nbcuisine,this.nbboutique,this.nbmagasin,this.nbhall,this.nbsalledebain,this.newconstruire,
     this.dependance,this.garage,this.piscine,this.jardin,this.toilettevisiteur,this.debarras,this.compteurperso,this.arrierecours,this.balcon,this.meuble,this.ascensseur, this.image1,this.image2,this.image3,this.image4,this.date_inscrit});
 
   factory Annonce.fromJson(Map<String, dynamic> json){
@@ -45,6 +49,7 @@ class Annonce{
       id:json['id'] as String,
       idadmin:json['idadmin'] as String,
       admincontact:json['admincontact'] as String,
+      adminpseudo:json['adminpseudo'] as String,
       intitule_bien: json['intitule_bien'] as String,
       type_bien: json['type_bien'] as String,
       type_mandat: json['type_mandat'] as String,
@@ -60,6 +65,9 @@ class Annonce{
       nbsalon: json['nbsalon'] as String,
       nbchambre: json['nbchambre'] as String,
       nbcuisine: json['nbcuisine'] as String,
+      nbboutique: json['nbboutique'] as String,
+      nbmagasin: json['nbmagasin'] as String,
+      nbhall: json['nbhall'] as String,
       nbsalledebain: json['nbsalledebain'] as String,
       newconstruire: json['newconstruire'] as String,
       dependance: json['dependance'] as String,
