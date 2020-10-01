@@ -56,7 +56,11 @@ class _DataBodyState extends State<DataBody> {
               Navigator.pop(context);
             });
           }else{
-            Navigator.pop(context);
+            setState(() {
+              annonces=annonce;
+              filtreAnnonce=annonces;
+              Navigator.pop(context);
+            });
           }
         } );
       });

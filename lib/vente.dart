@@ -1317,8 +1317,11 @@ class _VenteState extends State<Vente> {
                 contentPadding: EdgeInsets.all(5.0),
                 actions: <Widget>[
                   new FlatButton(onPressed: () {
+                    setState(() {
+                      Navigator.pop(context);
+                      _initialisation();
+                    });
                     Navigator.pop(context);
-                   _initialisation();
                    },
                       child: new Text("OK",style: TextStyle(color: kPrimaryColor),)
                   ),

@@ -1853,8 +1853,11 @@ class _LocationState extends State<Location> {
                 contentPadding: EdgeInsets.all(5.0),
                 actions: <Widget>[
                   new FlatButton(onPressed: () {
+                    setState(() {
+                      Navigator.pop(context);
+                      initiApresenvoie();
+                    });
                     Navigator.pop(context);
-                   initiApresenvoie();
                    },
                       child: new Text("OK",style: TextStyle(color: kPrimaryColor),)
                   ),
