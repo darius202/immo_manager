@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:immo_manager/DataTables.dart';
+import 'package:immo_manager/conditions.dart';
 import 'package:immo_manager/createDrawerBodyItem.dart';
 import 'package:immo_manager/createDrawerHeader.dart';
 import 'package:immo_manager/home.dart';
@@ -57,9 +58,9 @@ class navigationDrawer extends StatelessWidget {
           ),
           createDrawerBodyItem(
           icon: Icons.info_outline,
-            text: 'A propos',
+            text: "Conditions d'utilisation",
             onTap: () {
-
+              Navigator.push(context, SlideRightRoute(page:Condition()));
             }
           ),
           ListTile(

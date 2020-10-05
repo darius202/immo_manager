@@ -37,6 +37,7 @@ dependencies:
   country_list_pick: ^1.0.0+3
   grouped_buttons: ^1.0.4
   carousel_pro: ^1.0.0
+  searchable_dropdown: ^1.1.3
 
 
 

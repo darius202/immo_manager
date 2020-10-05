@@ -1,3 +1,4 @@
+import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:image_picker/image_picker.dart';
@@ -6,6 +7,7 @@ import 'package:immo_manager/constants.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:immo_manager/navigationDrawer.dart';
 import 'package:immo_manager/services/Services.dart';
+import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'dart:io';
 class Vente extends StatefulWidget {
 
@@ -80,6 +82,19 @@ class _VenteState extends State<Vente> {
 
   List<Object> images = List<Object>();
   Future<File> _imageFile;
+
+  String country_id;
+  List<String> country = [
+    "America",
+    "Brazil",
+    "Canada",
+    "India",
+    "Mongalia",
+    "USA",
+    "China",
+    "Russia",
+    "Germany"
+  ];
 
   List<ImageUploadModel> uploader = List();
 
@@ -521,6 +536,43 @@ class _VenteState extends State<Vente> {
                   );
                 },
               ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                SearchableDropdown(
+                  isCaseSensitiveSearch: true,
+                  items: filtreVille.map((Ville map) {
+                    return new DropdownMenuItem(
+                      value: map.codeville,
+                      child: Text(map.intituleville),
+                    );
+                  }
+                  ).toList(),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      if (_paysselected != "") {
+                        _quartierselected = "";
+                        _villeselected = newValue;
+                        int index = int.parse(newValue);
+                        villeController = _ville[index - 1].intituleville;
+                        filtreQuartier = _quartier.where((element) =>
+                        (element.codeville.toLowerCase().contains(
+                            newValue.toLowerCase()))
+                        ).toList();
+                      } else {
+                        _villeselected = "";
+                        _quartierselected = "";
+                      }
+                    });
+                    print("ville de bien: "+villeController);
+                  },
+                  hint: Text('Select Key'),
+                ),
+                SizedBox(height: 25.0,),
+                Text(_villeselected),
+              ],
             ),
             Container(
               decoration: new BoxDecoration(
@@ -1090,7 +1142,7 @@ class _VenteState extends State<Vente> {
                     new Flexible(
                       child: new TextFormField(
                         textCapitalization: TextCapitalization.sentences,
-                          maxLines: 4,
+                          maxLines: null,
                           decoration: InputDecoration(
                               hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
                               hintText: "Descriptif",
