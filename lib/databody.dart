@@ -13,7 +13,7 @@ class DataBody extends StatefulWidget {
 }
 
 class _DataBodyState extends State<DataBody> {
-  static const String lien = "https://gerestock.com/immo/images/";
+  static const String lien = "https://afriqueimmobilier.net/immo/images/";
   static const String parcelle = "Parcelle";
   static const String villa = "Maison ou Villa";
   static const String appartement = "Appartement";
@@ -142,7 +142,7 @@ class _DataBodyState extends State<DataBody> {
                                       children: <Widget>[
                                         filtreAnnonce[index].image1!=null ?
                                         Image.network(
-                                          lien+ filtreAnnonce[index].image1,
+                                          lien+filtreAnnonce[index].image1,
                                           width: 100,
                                           height: 100,
                                         ):Container(),
@@ -170,7 +170,7 @@ class _DataBodyState extends State<DataBody> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        filtreAnnonce[index].date_inscrit !=null? "Publié le: "+filtreAnnonce[index].date_inscrit :'Connexion impossible',
+                                        filtreAnnonce[index].date_inscrit !=null? "Publié le: "+filtreAnnonce[index].date_inscrit :'',
                                         style: TextStyle(
                                             color:kPrimaryColor,
                                             fontWeight: FontWeight.bold
@@ -183,7 +183,7 @@ class _DataBodyState extends State<DataBody> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        filtreAnnonce[index].type_bien !=null? filtreAnnonce[index].type_bien :'Connexion impossible',
+                                        filtreAnnonce[index].type_bien !=null? filtreAnnonce[index].type_bien :'',
                                         style: TextStyle(
                                             fontSize: 17.0,
                                             color:kPrimaryColor,
@@ -198,26 +198,34 @@ class _DataBodyState extends State<DataBody> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
-                                      Image.asset('assets/salon.png',fit: BoxFit.cover,),
+                                      filtreAnnonce[index].nbsalon.isNotEmpty?
+                                      Image.asset('assets/salon.png',fit: BoxFit.cover,):Container(),
                                       SizedBox(width: 5.0,),
-                                      Text(filtreAnnonce[index].nbsalon+" salon"),
+                                      filtreAnnonce[index].nbsalon.isNotEmpty?
+                                      Text(filtreAnnonce[index].nbsalon+" salon"):Container(),
                                       SizedBox(width: 8.0,),
-                                      Image.asset('assets/chambre.png',fit: BoxFit.cover,),
+                                      filtreAnnonce[index].nbchambre.isNotEmpty?
+                                      Image.asset('assets/chambre.png',fit: BoxFit.cover,):Container(),
                                       SizedBox(width: 5.0,),
-                                      Text(filtreAnnonce[index].nbchambre+" chambre"),
+                                      filtreAnnonce[index].nbchambre.isNotEmpty?
+                                      Text(filtreAnnonce[index].nbchambre+" chambre"):Container(),
                                     ],
                                   ):Container(),
                                   filtreAnnonce[index].type_bien==appartement?
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
-                                      Image.asset('assets/salon.png',fit: BoxFit.cover,),
+                                      filtreAnnonce[index].nbsalon.isNotEmpty?
+                                      Image.asset('assets/salon.png',fit: BoxFit.cover,):Container(),
                                       SizedBox(width: 5.0,),
-                                      Text(filtreAnnonce[index].nbsalon+" salon"),
+                                      filtreAnnonce[index].nbsalon.isNotEmpty?
+                                      Text(filtreAnnonce[index].nbsalon+" salon"):Container(),
                                       SizedBox(width: 8.0,),
-                                      Image.asset('assets/chambre.png',fit: BoxFit.cover,),
+                                      filtreAnnonce[index].nbchambre.isNotEmpty?
+                                      Image.asset('assets/chambre.png',fit: BoxFit.cover,):Container(),
                                       SizedBox(width: 5.0,),
-                                      Text(filtreAnnonce[index].nbchambre+" chambre"),
+                                      filtreAnnonce[index].nbchambre.isNotEmpty?
+                                      Text(filtreAnnonce[index].nbchambre+" chambre"):Container(),
                                     ],
                                   ):Container(),
                                   filtreAnnonce[index].type_bien !="Parcelle"?
@@ -226,13 +234,17 @@ class _DataBodyState extends State<DataBody> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
-                                      Image.asset('assets/cuisine.png',fit: BoxFit.cover,),
+                                      filtreAnnonce[index].nbcuisine.isNotEmpty?
+                                      Image.asset('assets/cuisine.png',fit: BoxFit.cover,):Container(),
                                       SizedBox(width: 5.0,),
-                                      Text(filtreAnnonce[index].nbcuisine+" cuisine"),
+                                      filtreAnnonce[index].nbcuisine.isNotEmpty?
+                                      Text(filtreAnnonce[index].nbcuisine+" cuisine"):Container(),
                                       SizedBox(width: 8.0,),
-                                      Image.asset('assets/bain.png',fit: BoxFit.cover,),
+                                      filtreAnnonce[index].nbsalledebain.isNotEmpty?
+                                      Image.asset('assets/bain.png',fit: BoxFit.cover,):Container(),
                                       SizedBox(width: 5.0,),
-                                      Text(filtreAnnonce[index].nbsalledebain+" douche"),
+                                      filtreAnnonce[index].nbsalledebain.isNotEmpty?
+                                      Text(filtreAnnonce[index].nbsalledebain+" douche"):Container(),
                                     ],
                                   ):Container(),
                                   SizedBox(height: 8.0,),
@@ -240,13 +252,13 @@ class _DataBodyState extends State<DataBody> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
-                                      filtreAnnonce[index].nbboutique!=null?
+                                      filtreAnnonce[index].nbboutique.isNotEmpty?
                                       Text(filtreAnnonce[index].nbboutique+" Boutique",style:TextStyle(fontSize:12,color:kPrimaryColor)):Container(),
                                       SizedBox(width: 5.0,),
-                                      filtreAnnonce[index].nbmagasin!=null?
+                                      filtreAnnonce[index].nbmagasin.isNotEmpty?
                                       Text(filtreAnnonce[index].nbmagasin+" Magasin",style:TextStyle(fontSize:12,color:kPrimaryColor)):Container(),
                                       SizedBox(width: 5.0,),
-                                      filtreAnnonce[index].nbhall!=null?
+                                      filtreAnnonce[index].nbhall.isNotEmpty?
                                       Text(filtreAnnonce[index].nbhall+" Hall",style:TextStyle(fontSize:12,color:kPrimaryColor)):Container(),
                                     ],
                                   ):Container(),
@@ -254,26 +266,34 @@ class _DataBodyState extends State<DataBody> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
-                                      Image.asset('assets/cuisine.png',fit: BoxFit.cover,),
+                                      filtreAnnonce[index].nbcuisine.isNotEmpty?
+                                      Image.asset('assets/cuisine.png',fit: BoxFit.cover,):Container(),
                                       SizedBox(width: 5.0,),
-                                      Text(filtreAnnonce[index].nbcuisine+" cuisine"),
+                                      filtreAnnonce[index].nbcuisine.isNotEmpty?
+                                      Text(filtreAnnonce[index].nbcuisine+" cuisine"):Container(),
                                       SizedBox(width: 8.0,),
-                                      Image.asset('assets/bain.png',fit: BoxFit.cover,),
+                                      filtreAnnonce[index].nbsalledebain.isNotEmpty?
+                                      Image.asset('assets/bain.png',fit: BoxFit.cover,):Container(),
                                       SizedBox(width: 5.0,),
-                                      Text(filtreAnnonce[index].nbsalledebain+" douche"),
+                                      filtreAnnonce[index].nbsalledebain.isNotEmpty?
+                                      Text(filtreAnnonce[index].nbsalledebain+" douche"):Container(),
                                     ],
                                   ):Container(),
                                   filtreAnnonce[index].type_bien==bureau?
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
-                                      Image.asset('assets/bain.png',fit: BoxFit.cover,),
+                                      filtreAnnonce[index].nbsalledebain.isNotEmpty?
+                                      Image.asset('assets/bain.png',fit: BoxFit.cover,):Container(),
                                       SizedBox(width: 5.0,),
-                                      Text(filtreAnnonce[index].nbsalon+" douche"),
+                                      filtreAnnonce[index].nbsalledebain.isNotEmpty?
+                                      Text(filtreAnnonce[index].nbsalledebain+" douche"):Container(),
                                       SizedBox(width: 8.0,),
-                                      Image.asset('assets/chambre.png',fit: BoxFit.cover,),
+                                      filtreAnnonce[index].nbchambre.isNotEmpty?
+                                      Image.asset('assets/chambre.png',fit: BoxFit.cover,):Container(),
                                       SizedBox(width: 5.0,),
-                                      Text(filtreAnnonce[index].nbchambre+" pièce"),
+                                      filtreAnnonce[index].nbchambre.isNotEmpty?
+                                      Text(filtreAnnonce[index].nbchambre+" pièce"):Container(),
                                     ],
                                   ):Container(),
 
@@ -282,7 +302,7 @@ class _DataBodyState extends State<DataBody> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        filtreAnnonce[index].prix!=null ?filtreAnnonce[index].prix+" Fcfa ":'Connexion impossible...',
+                                        filtreAnnonce[index].prix!=null ? moneyFormat(filtreAnnonce[index].prix)+" Fcfa ":'',
                                         style: TextStyle(
                                             fontSize: 18.0,
                                             color: Colors.red,
@@ -297,7 +317,7 @@ class _DataBodyState extends State<DataBody> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        filtreAnnonce[index].negoce!=null? filtreAnnonce[index].negoce:'Connexion impossible...',
+                                        filtreAnnonce[index].negoce!=null? filtreAnnonce[index].negoce:'',
                                         style: TextStyle(
                                             color: kTextLigthtColor,
                                             fontWeight: FontWeight.bold,

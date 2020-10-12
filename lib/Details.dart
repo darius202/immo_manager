@@ -16,16 +16,16 @@ class Details extends StatefulWidget{
 }
 
 class _Details extends State<Details> {
-  static const String lien = "https://gerestock.com/immo/images/";
+  static const String lien = "https://afriqueimmobilier.net/immo/images/";
   static const String parcelle = "Parcelle";
   static const String villa = "Maison ou Villa";
   static const String appartement = "Appartement";
   static const String bureau = "Bureau ou Boutique";
 
-  String path1 = "https://gerestock.com/immo/images/";
-  String path2 = "https://gerestock.com/immo/images/";
-  String path3 = "https://gerestock.com/immo/images/";
-  String path4 = "https://gerestock.com/immo/images/";
+  String path1 = "https://afriqueimmobilier.net/immo/images/";
+  String path2 = "https://afriqueimmobilier.net/immo/images/";
+  String path3 = "https://afriqueimmobilier.net/immo/images/";
+  String path4 = "https://afriqueimmobilier.net/immo/images/";
   bool readintitule = true;
   bool readtypebien = true;
   bool readprix = true;

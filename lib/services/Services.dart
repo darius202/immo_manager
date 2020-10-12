@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:immo_manager/models/Annonces.dart';
 // ignore: camel_case_types
 class annoncesService{
-  static const ROOT ='https://gerestock.com/immo/annonceRequetes.php';
-  static const ROOTIMAGE ='https://gerestock.com/immo/uploadimage.php';
+  static const ROOT ='https://afriqueimmobilier.net/immo/annonceRequetes.php';
+  static const ROOTIMAGE ='https://afriqueimmobilier.net/immo/uploadimage.php';
   static const _GET_ALL_ACTION= 'GET_ALL';
   static const _ADD_PROD_ACTION= 'ADD_PROD';
   static const _UPDATE_PROD_ACTION= 'UPDATE_PROD';
@@ -55,12 +55,7 @@ class annoncesService{
         var stream = new http.ByteStream(imageFile.openRead());
         stream.cast();
         var length = await imageFile.length();
-        nom1 = imageFile.path.substring(46);
-        if(nom1.contains("image_picker",0)){
-
-        }else{
-          nom1 = nom1.substring(29);
-        }
+        nom1 = imageFile.path.substring(75);
         user += "/";
         user += imageFile.path.substring(46);
         var uri = Uri.parse(ROOTIMAGE);
@@ -82,12 +77,8 @@ class annoncesService{
         var length2 = await imageFile2.length();
         String user2 = user;
         user2 += "/";
-         nom2  = imageFile2.path.substring(46);
-        if(nom2.contains("image_picker",0)){
+         nom2  = imageFile2.path.substring(75);
 
-        }else{
-          nom2 = nom2.substring(29);
-        }
         user2 += imageFile2.path.substring(46);
         var uri2 = Uri.parse(ROOTIMAGE);
         var request2 = new http.MultipartRequest("POST", uri2);
@@ -105,12 +96,7 @@ class annoncesService{
          var stream3 = new http.ByteStream(imageFile3.openRead());
          stream3.cast();
          String user3 = user;
-         nom3 = imageFile3.path.substring(46);
-         if(nom3.contains("image_picker",0)){
-
-         }else{
-           nom3 = nom3.substring(29);
-         }
+         nom3 = imageFile3.path.substring(75);
          user3 += "/";
          user3 += imageFile3.path.substring(46);
          var length3 = await imageFile3.length();
@@ -134,12 +120,7 @@ class annoncesService{
         var length4 = await imageFile4.length();
         String user4 = user;
         user4 += "/";
-        nom4  = imageFile4.path.substring(46);
-        if(nom4.contains("image_picker",0)){
-
-        }else{
-          nom4 = nom4.substring(29);
-        }
+        nom4  = imageFile4.path.substring(75);
         user4 += imageFile4.path.substring(46);
         var uri4 = Uri.parse(ROOTIMAGE);
         var request4 = new http.MultipartRequest("POST", uri4);
@@ -393,9 +374,9 @@ class annoncesService{
 }
 
 class Userservices{
-  static const ROOT ='https://gerestock.com/immo/annonceRequetes.php';
+  static const ROOT ='https://afriqueimmobilier.net/immo/annonceRequetes.php';
   static const _GET_ALL_ACTION= 'GET_USER';
-  static const ROOTLOCALISATION ='https://gerestock.com/immo/localisation.php';
+  static const ROOTLOCALISATION ='https://afriqueimmobilier.net/immo/localisation.php';
 
   static Future<List<User>> getUser(String email, String mot_de_passe) async {
     try{
@@ -454,7 +435,7 @@ class Userservices{
 
 
 class Paysservices{
-  static const ROOT ='https://gerestock.com/immo/localisation.php';
+  static const ROOT ='https://afriqueimmobilier.net/immo/localisation.php';
   static const _GET_ALL_ACTION="GET_PAYS";
 
   static Future<List<Pays>> getPays() async {
@@ -483,7 +464,7 @@ class Paysservices{
 }
 
 class Villeservices{
-  static const ROOT ='https://gerestock.com/immo/localisation.php';
+  static const ROOT ='https://afriqueimmobilier.net/immo/localisation.php';
   static const _GET_VILE_ACTION= 'GET_VILLE';
 
   static Future<List<Ville>> getVille() async {
@@ -513,7 +494,7 @@ class Villeservices{
 
 
 class Quartierservices{
-  static const ROOT ='https://gerestock.com/immo/localisation.php';
+  static const ROOT ='https://afriqueimmobilier.net/immo/localisation.php';
   static const _GET_QUARTIER_ACTION= 'GET_QUARTIER';
 
   static Future<List<Quartier>> getQuartier() async {
@@ -544,7 +525,7 @@ class Quartierservices{
 
 
 class Mandatservices{
-  static const ROOT ='https://gerestock.com/immo/localisation.php';
+  static const ROOT ='https://afriqueimmobilier.net/immo/localisation.php';
   static const _GET_QUARTIER_ACTION= 'GET_MANDAT';
 
   static Future<List<Mandat>> getMandat() async {
@@ -574,7 +555,7 @@ class Mandatservices{
 }
 
 class TypeBienservices{
-  static const ROOT ='https://gerestock.com/immo/localisation.php';
+  static const ROOT ='https://afriqueimmobilier.net/immo/localisation.php';
   static const _GET_QUARTIER_ACTION= 'GET_MANDAT';
 
   static Future<List<Mandat>> getMandat() async {
@@ -604,7 +585,7 @@ class TypeBienservices{
 }
 
 class Bienservices{
-  static const ROOT ='https://gerestock.com/immo/localisation.php';
+  static const ROOT ='https://afriqueimmobilier.net/immo/localisation.php';
   static const _GET_QUARTIER_ACTION= 'GET_LOUER';
 
   static Future<List<Bienlouable>> getLouer() async {
@@ -635,7 +616,7 @@ class Bienservices{
 }
 
 class Etageservices{
-  static const ROOT ='https://gerestock.com/immo/localisation.php';
+  static const ROOT ='https://afriqueimmobilier.net/immo/localisation.php';
   static const _GET_QUARTIER_ACTION= 'GET_ETAGE';
 
   static Future<List<Etage>> getEtage() async {
@@ -665,7 +646,7 @@ class Etageservices{
 }
 
 class CodePaysservices{
-  static const ROOT ='https://gerestock.com/immo/localisation.php';
+  static const ROOT ='https://afriqueimmobilier.net/immo/localisation.php';
   static const _GET_QUARTIER_ACTION= 'GET_CODEPAYS';
 
   static Future<List<codePays>> getCode() async {
@@ -696,7 +677,7 @@ class CodePaysservices{
 
 
 class Situationservices{
-  static const ROOT ='https://gerestock.com/immo/localisation.php';
+  static const ROOT ='https://afriqueimmobilier.net/immo/localisation.php';
   static const _GET_QUARTIER_ACTION= 'GET_SITUATION';
 
   static Future<List<Situationadmin>> getSituationadmin() async {
@@ -727,7 +708,7 @@ class Situationservices{
 
 
 class Usersnotifications {
-  static const ROOT = 'https://gerestock.com/immo/validations.php';
+  static const ROOT = 'https://afriqueimmobilier.net/immo/validations.php';
   static Future<List<User>> getUser(String representantId) async {
     try {
       var map = Map<String, dynamic>();
@@ -778,7 +759,7 @@ class SuggestionServices{
       var map= Map<String, dynamic>();
       map['message']= message;
       map['contact']= contact;
-      final response = await http.post('https://gerestock.com/immo/suggestion.php',body:map);
+      final response = await http.post('https://afriqueimmobilier.net/immo/suggestion.php',body:map);
       print('Voici le message du body addProduit: ${response.body}');
       if(200 == response.statusCode){
         return response.body;

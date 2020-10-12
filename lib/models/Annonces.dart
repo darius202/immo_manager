@@ -133,6 +133,10 @@ class Ville{
   String intituleville;
   String representantId;
   Ville({this.codeville,this.codepays,this.intituleville,this.representantId});
+  @override
+  String toString() {
+    return '${codeville} ${intituleville}'.toLowerCase() + ' ${codeville} ${intituleville}'.toUpperCase();
+  }
   factory Ville.fromJson(Map<String, dynamic> json){
     return Ville(
       codeville:json['codeville'] as String,
@@ -164,6 +168,10 @@ class Quartier{
   String intitulequartier;
 
   Quartier({this.codequartier,this.codeville,this.codepays,this.intitulequartier});
+  @override
+  String toString() {
+    return '${codequartier} ${intitulequartier}'.toLowerCase() + ' ${codequartier} ${intitulequartier}'.toUpperCase();
+  }
   factory Quartier.fromJson(Map<String, dynamic> json){
     return Quartier(
       codequartier:json['codequartier'] as String,

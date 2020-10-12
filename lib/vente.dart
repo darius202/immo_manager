@@ -1,4 +1,3 @@
-import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,10 +22,11 @@ class _VenteState extends State<Vente> {
   //Pays  variables
   List <Pays> _pays = List();
   String _paysselected = "";
+ Ville selectedValue;
+ Quartier selectedquartier;
   String paysController;
 //Ville  variables
   List <Ville> _ville = List();
-  String _villeselected = "";
   List <Ville> filtreVille = List();
   String villeController;
   bool tapachat=false;
@@ -36,7 +36,6 @@ class _VenteState extends State<Vente> {
 //Quartier  variables
   List <Quartier> _quartier = List();
   List <Quartier> filtreQuartier = List();
-  String _quartierselected = "";
   String quartierController;
 //Type de bien variables
   List <Mandat> _mandat = List();
@@ -213,10 +212,10 @@ class _VenteState extends State<Vente> {
         uploader[2].imageFile,
         uploader[3].imageFile,
         user[0].pseudo).then((value) {
-      if ("1" == value) {
+      if (value=='1') {
         Navigator.pop(context);
+        _initialisation();
         reussi();
-
       }else{
        Navigator.pop(context);
        _showMessageInScaffold2("Annonce non plubliée");
@@ -457,8 +456,6 @@ class _VenteState extends State<Vente> {
                               int index = int.parse(newValue);
                               paysController = _pays[index - 1].intitulepays;
                               _paysselected = newValue;
-                              _villeselected = "";
-                              _quartierselected = "";
                               filtreVille = _ville.where((element) =>
                               (element.codepays.toLowerCase().contains(
                                   newValue.toLowerCase()))
@@ -481,146 +478,60 @@ class _VenteState extends State<Vente> {
               ),
             ),
             Container(
-              decoration: new BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                  right: BorderSide(width: 0.5, color: Colors.grey),
-                ),
-              ),
-              height: 45.0,
-              margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
-              child: FormField(
-                builder: (FormFieldState state) {
-                  return InputDecorator(
-                    decoration: InputDecoration(
-                      hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
-                      hintText: "Ville",
-                    ),
-                    isEmpty: _villeselected == "",
-                    child: new DropdownButtonHideUnderline(
-                      child: ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButton(
-                          isDense: true,
-                          value: _villeselected.isNotEmpty
-                              ? _villeselected
-                              : null,
-                          onChanged: (String newValue) {
-                            setState(() {
-                              if (_paysselected != "") {
-                                _quartierselected = "";
-                                _villeselected = newValue;
-                                int index = int.parse(newValue);
-                                villeController = _ville[index - 1].intituleville;
-                                filtreQuartier = _quartier.where((element) =>
-                                (element.codeville.toLowerCase().contains(
-                                    newValue.toLowerCase()))
-                                ).toList();
-                              } else {
-                                _villeselected = "";
-                                _quartierselected = "";
-                              }
-                            });
-                            print("ville de bien: "+villeController);
-                          },
-                          items: filtreVille.map((Ville map) {
-                            return new DropdownMenuItem(
-                              value: map.codeville,
-                              child: Text(map.intituleville),
-                            );
-                          }
-                          ).toList(),
-                        ),
+              padding: EdgeInsets.only(top:10.0),
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  new Flexible(
+                    child: new   SearchableDropdown(
+                      hint: Text('Ville'),
+                      items: filtreVille.map((item) {
+                        return new DropdownMenuItem<Ville>(
+                            child: Text(item.intituleville), value: item);
+                      }).toList(),
+                      isExpanded: true,
+                      value: selectedValue,
+                      isCaseSensitiveSearch: true,
+                      searchHint: new Text(
+                        'Selectionnez une ville ',
+                        style: new TextStyle(fontSize: 20),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedValue = value;
+                          villeController=selectedValue.intituleville;
+                          filtreQuartier = _quartier.where((element) =>
+                          (element.codeville.toLowerCase().contains(
+                              selectedValue.codeville.toLowerCase()))
+                          ).toList();
+                        });
+                      },
                     ),
-                  );
-                },
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SearchableDropdown(
-                  isCaseSensitiveSearch: true,
-                  items: filtreVille.map((Ville map) {
-                    return new DropdownMenuItem(
-                      value: map.codeville,
-                      child: Text(map.intituleville),
-                    );
-                  }
-                  ).toList(),
-                  onChanged: (String newValue) {
-                    setState(() {
-                      if (_paysselected != "") {
-                        _quartierselected = "";
-                        _villeselected = newValue;
-                        int index = int.parse(newValue);
-                        villeController = _ville[index - 1].intituleville;
-                        filtreQuartier = _quartier.where((element) =>
-                        (element.codeville.toLowerCase().contains(
-                            newValue.toLowerCase()))
-                        ).toList();
-                      } else {
-                        _villeselected = "";
-                        _quartierselected = "";
-                      }
-                    });
-                    print("ville de bien: "+villeController);
-                  },
-                  hint: Text('Select Key'),
-                ),
-                SizedBox(height: 25.0,),
-                Text(_villeselected),
-              ],
-            ),
-            Container(
-              decoration: new BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                  right: BorderSide(width: 0.5, color: Colors.grey),
-                ),
-              ),
-              height: 45.0,
-              margin: const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
-              child: FormField(
-                builder: (FormFieldState state) {
-                  return InputDecorator(
-                    decoration: InputDecoration(
-                      hintStyle: TextStyle(fontStyle: FontStyle.normal,color: kTextLigthtColor),
-                      hintText: "Quartier",
-                    ),
-                    isEmpty: _quartierselected == '',
-                    child: new DropdownButtonHideUnderline(
-                      child:ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButton(
-                          isDense: true,
-                          value: _quartierselected.isNotEmpty ? _quartierselected : null,
-                          onChanged: (String newValue){
-                            setState(() {
-                              if(_villeselected!=""){
-                                _quartierselected=newValue;
-                                int index=int.parse(newValue);
-                                quartierController= _quartier[index-1].intitulequartier;
-                              }else{
-                                _villeselected="";
-                              }
-                            });
-                            print("quartier de bien:"+quartierController);
-                          },
-                          items: filtreQuartier.map((Quartier map){
-                            return new DropdownMenuItem(
-                              value: map.codequartier,
-                              child: Text(map.intitulequartier),
-                            );
-                          }
-                          ).toList(),
-                        ),
+                  ),
+                  SizedBox(width: 20.0,),
+                  new Flexible(
+                    child: new  SearchableDropdown(
+                      hint: Text('Quartier'),
+                      items: filtreQuartier.map((item) {
+                        return new DropdownMenuItem<Quartier>(
+                            child: Text(item.intitulequartier), value: item);
+                      }).toList(),
+                      isExpanded: true,
+                      value: selectedquartier,
+                      isCaseSensitiveSearch: true,
+                      searchHint: new Text(
+                        'Selectionnez un quartier ',
+                        style: new TextStyle(fontSize: 20,color:kPrimaryColor),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedquartier = value;
+                          quartierController=selectedquartier.intitulequartier;
+                        });
+                      },
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
             ),
             GestureDetector(
@@ -1465,7 +1376,7 @@ class _VenteState extends State<Vente> {
 
   Future _onAddImageClick(int index) async {
     setState(() {
-      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery);
+      _imageFile = ImagePicker.pickImage(source: ImageSource.gallery,imageQuality: 20);
       getFileImage(index);
     });
   }
@@ -1521,5 +1432,80 @@ class Dialogs {
                     )
                   ]));
         });
+  }
+}
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class VagasDisponivei {
+  String v_n;
+  String v_id;
+
+  VagasDisponivei({this.v_n, this.v_id});
+
+  @override
+  String toString() {
+    return '${v_n} ${v_id}'.toLowerCase() + ' ${v_n} ${v_id}'.toUpperCase();
+  }
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  List<VagasDisponivei> _vagasDisponiveis;
+  String vaga_name;
+  VagasDisponivei selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _vagasDisponiveis = [
+      VagasDisponivei(v_id: "1", v_n: "A0001"),
+      VagasDisponivei(v_id: "2", v_n: "A0002"),
+      VagasDisponivei(v_id: "3", v_n: "A0003"),
+      VagasDisponivei(v_id: "4", v_n: "A0004"),
+      VagasDisponivei(v_id: "5", v_n: "A0005"),
+      VagasDisponivei(v_id: "6", v_n: "A0006"),
+      VagasDisponivei(v_id: "7", v_n: "A0007"),
+      VagasDisponivei(v_id: "8", v_n: "A0008"),
+      VagasDisponivei(v_id: "9", v_n: "A0009"),
+      VagasDisponivei(v_id: "10", v_n: "A0010"),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('teste'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SearchableDropdown(
+              hint: Text('Select'),
+              items: _vagasDisponiveis.map((item) {
+                return new DropdownMenuItem<VagasDisponivei>(
+                    child: Text(item.v_n), value: item);
+              }).toList(),
+              isExpanded: true,
+              value: selectedValue,
+              isCaseSensitiveSearch: true,
+              searchHint: new Text(
+                'Select ',
+                style: new TextStyle(fontSize: 20),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  selectedValue = value;
+                  print(selectedValue);
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
