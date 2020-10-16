@@ -94,15 +94,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _getVille();
-    _getPays();
-    _getQuartier();
-    _getMandat();
-    _getlouable();
-    _getEtage();
-    _getSituation();
-    _getCode();
-    startTime();
+      _getVille();
+      _getPays();
+      _getQuartier();
+      _getMandat();
+      _getlouable();
+      _getSituation();
+      _getEtage();
+      _getCode();
+      startTime();
   }
 
   @override
