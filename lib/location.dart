@@ -404,7 +404,6 @@ class _LocationState extends State<Location> {
                             type_bienController = newValue;
                             _initialisation();
                           });
-                          print(_mandatselected);
                         },
                         items: _mandat.map((Bienlouable map) {
                           return new DropdownMenuItem(
@@ -766,7 +765,6 @@ class _LocationState extends State<Location> {
                                 _etageselected = newValue;
                                 nbetageController.text = newValue;
                               });
-                              print(_etageselected);
                             },
                             items: _etage.map((Etage map) {
                               return new DropdownMenuItem(
@@ -992,8 +990,6 @@ class _LocationState extends State<Location> {
                     if (_formKey.currentState.validate()) {
                       _onLoading();
                     }
-                    setState(() {
-                    });
                   },
                   child: Text("PUBLIER",
                     style: TextStyle(color: Colors.white, fontSize: 18,fontFamily: "Monteserrat"),),
@@ -1239,7 +1235,6 @@ class _LocationState extends State<Location> {
                                 _etageselected = newValue;
                                 nbetageController.text = newValue;
                               });
-                              print(_etageselected);
                             },
                             items: _etage.map((Etage map) {
                               return new DropdownMenuItem(
@@ -1462,8 +1457,6 @@ class _LocationState extends State<Location> {
                     if (_formKey.currentState.validate()) {
                       _onLoading();
                     }
-                    setState(() {
-                    });
                   },
                   child: Text("PUBLIER",
                     style: TextStyle(color: Colors.white, fontSize: 18,fontFamily: "Monteserrat"),),
@@ -1608,7 +1601,6 @@ class _LocationState extends State<Location> {
                                 _etageselected = newValue;
                                 nbetageController.text = newValue;
                               });
-                              print(_etageselected);
                             },
                             items: _etage.map((Etage map) {
                               return new DropdownMenuItem(

@@ -38,8 +38,6 @@ class _Sigin extends State<Sigin> {
   List <Quartier> filtreQuartier= [];
   String _quartierselected="";
 
-
-  String _titreProgress="Créer un compte";
   @override
   void initState() {
     // TODO: implement initState
@@ -107,7 +105,7 @@ class _Sigin extends State<Sigin> {
         quartiercontroller.text,
         contactcode+contactcontroller.text,
         representantcontroller.text).then((value) {
-      if ("1" == value) {
+      if ('1' == value) {
         Navigator.pop(context);
         SavePass();
         SaveEmail();
@@ -131,7 +129,7 @@ class _Sigin extends State<Sigin> {
         centerTitle: true,
       ),
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset : false,
+      resizeToAvoidBottomInset : true,
       body: SingleChildScrollView(
         child:  Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -157,7 +155,7 @@ class _Sigin extends State<Sigin> {
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Entrer un nom correcte svp';
+                          return 'Entrez un nom correcte svp';
                         }
                         return null;
                       },
@@ -269,7 +267,6 @@ class _Sigin extends State<Sigin> {
                                     (element.codepays.toLowerCase().contains(newValue.toLowerCase()))
                                     ).toList();
                                   });
-                                  print(_paysselected);
                                 },
                                 items: _pays.map((Pays map){
                                   return new DropdownMenuItem(
@@ -370,7 +367,6 @@ class _Sigin extends State<Sigin> {
                                       _villeselected="";
                                     }
                                   });
-                                  print(" Akassato: ${newValue}");
                                 },
                                 items: filtreQuartier.map((Quartier map){
                                   return new DropdownMenuItem(
@@ -474,7 +470,7 @@ class _Sigin extends State<Sigin> {
             barrierDismissible: false,
             builder: (BuildContext context) {
               return new AlertDialog(
-                title: new Text("Email déjà utilisé, veuillez changer",style: TextStyle(color:Colors.red,fontSize: 16),),
+                title: new Text("Un problème est survenu, Réessayez",style: TextStyle(color:Colors.red,fontSize: 16),),
                 actions: <Widget>[
                   new FlatButton(onPressed: () {
                     Navigator.pop(context);

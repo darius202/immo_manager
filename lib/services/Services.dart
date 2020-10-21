@@ -603,7 +603,6 @@ class Bienservices{
       }
     }
     catch(e){
-
       return List<Bienlouable>();
     }
   }
