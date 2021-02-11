@@ -251,10 +251,10 @@ class Situationadmin {
 
 List <Situationadmin> situation= List();
 List <User> user= List();
-List <Pays> pays;
-List <Ville> ville;
-List <Quartier> quartier;
-List <Mandat> mandat;
-List <Etage> etage;
-List <codePays> code;
-List <Bienlouable> louable;
+List <Pays> pays=List();
+List <Ville> ville=List();
+List <Quartier> quartier=List();
+List <Mandat> mandat=List();
+List <Etage> etage=List();
+List <codePays> code=List();
+List <Bienlouable> louable=List();
