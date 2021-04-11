@@ -1,11 +1,11 @@
 import 'Dart:async';
 import 'package:flutter/material.Dart';
-import 'package:immo_manager/constants.dart';
-import 'package:immo_manager/errorconnect.dart';
-import 'package:immo_manager/login.dart';
+import 'package:immo_manager/constantes/constants.dart';
+import 'package:immo_manager/constantes/errorconnect.dart';
+import 'package:immo_manager/authentifications/login.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:immo_manager/services/Services.dart';
-import 'package:immo_manager/transition.dart';
+import 'package:immo_manager/constantes/transition.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -29,11 +29,6 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  _getCode(){
-    CodePaysservices.getCode().then((value) {
-      code=value;
-    });
-  }
   _getEtage(){
     Etageservices.getEtage().then((value) {
       setState(() {
@@ -67,13 +62,19 @@ class _SplashScreenState extends State<SplashScreen> {
       situation=value;
     });
   }
+
+  _getSolde(){
+    SoldeServices.getSolde().then((value) {
+      paiement=value;
+    });
+  }
   startTime() async {
     var duration = new Duration(seconds: 6);
     return new Timer(duration, route);
   }
   route() {
       if (pays.length == 0 || ville.length == 0 || quartier.length == 0 ||
-          louable.length == 0 || etage.length == 0 || code.length == 0) {
+          louable.length == 0 || etage.length == 0 || paiement.length == 0) {
         Navigator.push(context, SlideRightRoute(page: Connector())).then((
             value) {
           setState(() {
@@ -84,7 +85,6 @@ class _SplashScreenState extends State<SplashScreen> {
             _getlouable();
             _getSituation();
             _getEtage();
-            _getCode();
             startTime();
           });
         });
@@ -100,8 +100,8 @@ class _SplashScreenState extends State<SplashScreen> {
       _getMandat();
       _getlouable();
       _getSituation();
+    _getSolde();
       _getEtage();
-      _getCode();
       startTime();
   }
 

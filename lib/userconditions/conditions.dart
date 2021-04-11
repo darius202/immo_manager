@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:immo_manager/appbar.dart';
-import 'package:immo_manager/constants.dart';
+import 'package:immo_manager/appbar/appbar.dart';
+import 'package:immo_manager/constantes/constants.dart';
 
 class Condition extends StatelessWidget {
   @override

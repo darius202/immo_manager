@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:immo_manager/Details.dart';
-import 'package:immo_manager/constants.dart';
+import 'package:immo_manager/constantes/constants.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:immo_manager/services/Services.dart';
+
+import 'Details.dart';
 class DataBody extends StatefulWidget {
   User user;
   DataBody(User user){

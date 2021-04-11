@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:immo_manager/flashScreen.dart';
-import 'package:immo_manager/login.dart';
+import 'package:immo_manager/home/flashScreen.dart';
+import 'package:immo_manager/authentifications/login.dart';
 import 'package:flutter/services.dart';
 
 void main() {

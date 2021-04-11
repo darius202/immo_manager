@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:immo_manager/constants.dart';
+import 'package:immo_manager/constantes/constants.dart';
 import 'package:immo_manager/models/Annonces.dart';
-import 'package:immo_manager/profitmodif.dart';
-import 'package:immo_manager/transition.dart';
+import 'package:immo_manager/profil/profitmodif.dart';
+import 'package:immo_manager/constantes/transition.dart';
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -38,12 +38,7 @@ class _ProfilePageState extends State
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios,color:Colors.white,size: 20,),
-          onPressed: (){
-            Navigator.pop(context);
-          },
-        ),
+        leading:Text(""),
         backgroundColor: kPrimaryColor,
         title: Text("Mon profil",style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: false,
@@ -149,16 +144,6 @@ class _ProfilePageState extends State
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.location_on,color: kPrimaryColor,size: 30,),
-                            Text(user[0].quartier.toUpperCase()+" - ",
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  color: kPrimaryColor,fontWeight: FontWeight.bold),
-                            ),
-                            Text(user[0].ville.toUpperCase()+" - ",
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  color: kPrimaryColor,fontWeight: FontWeight.bold),
-                            ),
                             Text(user[0].pays.toUpperCase(),
                               style: TextStyle(
                                   fontSize: 18.0,
@@ -166,6 +151,18 @@ class _ProfilePageState extends State
                             )
                           ]),
                       SizedBox(height: 80.0),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                             FlatButton(
+                              color: kPrimaryColor,
+                              onPressed: (){
+                                Navigator.push(context, SlideRightRoute(page:  ProfilModif()));
+                              },
+                              child: Text("MODIFIER",
+                                style: TextStyle(color: Colors.white, fontSize: 18),),
+                            ),
+                          ]),
                     ],
                   ),
                 ),

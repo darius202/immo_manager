@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:immo_manager/constants.dart';
-import 'package:immo_manager/home.dart';
+import 'package:immo_manager/authentifications/signin.dart';
+import 'package:immo_manager/constantes/constants.dart';
+import 'package:immo_manager/constantes/transition.dart';
+import 'package:immo_manager/home/menu.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:immo_manager/services/Services.dart';
-import 'package:immo_manager/transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:immo_manager/signin.dart';
 class Login extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -97,7 +97,7 @@ class _Login extends State<Login> {
          Navigator.of(context).pushReplacement(
              MaterialPageRoute(
                builder: (context){
-                 return Home();
+                 return MyBottomBarWidget();
                },
              )
          );
@@ -220,10 +220,10 @@ class _Login extends State<Login> {
             barrierDismissible: false,
             builder: (BuildContext context) {
               return new AlertDialog(
-                title: new Text("Compte en attente de validation",style: TextStyle(color:Colors.red),),
+                title: new Text("Compte suspendu",style: TextStyle(color:Colors.red),),
                 content: new Container(
                   padding: EdgeInsets.all(5.0),
-                  child: Text("Votre compte est en attente de validation, réessayez dans quelques instants..."),
+                  child: Text("Ce compte est bloqué"),
                 ),
                 contentPadding: EdgeInsets.all(5.0),
                 actions: <Widget>[

@@ -37,6 +37,30 @@ class annoncesService{
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed.map<Annonce>((json) => Annonce.fromJson(json)).toList();
   }
+  //
+  static Future<List<AbonnementCour>> getPaiement(String idadmin) async {
+    try{
+      var map= Map<String, dynamic>();
+      map['action']= "GET_PAIEMENT";
+      map['idadmin']= idadmin;
+      final response = await http.post(ROOT,body:map);
+      print('Voici le message du body getPaiment : ${response.body}');
+      if(200 == response.statusCode){
+        List<AbonnementCour> list = parseResponses(response.body);
+        return list;
+      }else{
+        return List<AbonnementCour>();
+      }
+    }
+    catch(e){
+
+      return List<AbonnementCour>();
+    }
+  }
+  static List<AbonnementCour> parseResponses(String responseBody){
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<AbonnementCour>((json) => AbonnementCour.fromJson(json)).toList();
+  }
 //User
 
   //AJOUT DE PRODUITS A LA BASE DE DONNEES
@@ -372,7 +396,32 @@ class annoncesService{
   }
 
 }
+class Updatesoldes{
+  static const ROOT ='https://afriqueimmobilier.net/immo/annonceRequetes.php';
+  static const _GET_QUARTIER_ACTION= 'UPDATE_SOLDE';
 
+  static Future<String> updateSolde(String idadmin,String debut,String fin,String montant) async {
+    try{
+      var map= Map<String, dynamic>();
+      map['action']= _GET_QUARTIER_ACTION;
+      map['idadmin']=idadmin;
+      map['debut']=debut;
+      map['fin']=fin;
+      map['montant']=montant;
+      final response = await http.post(ROOT,body:map);
+      print('Voici le message du body updatePaiement: ${response.body}');
+      if(200 == response.statusCode){
+        return response.body;
+      }else{
+        return "error";
+      }
+    }
+    catch(e){
+      return "error";
+    }
+  }
+
+}
 class Userservices{
   static const ROOT ='https://afriqueimmobilier.net/immo/annonceRequetes.php';
   static const _GET_ALL_ACTION= 'GET_USER';
@@ -405,7 +454,7 @@ class Userservices{
 
 
   //AJOUT DE PRODUITS A LA BASE DE DONNEES
-  static Future<String> addUser(String pseudo,String email, String mot_de_passe, String pays,String ville,String quartier,String contact,String representantId) async{
+  static Future<String> addUser(String pseudo,String email, String mot_de_passe, String pays,String contact) async{
     try{
       var map= Map<String, dynamic>();
       map['action']= "ADD_USER";
@@ -413,10 +462,7 @@ class Userservices{
       map['email']= email;
       map['mot_de_passe']= mot_de_passe;
       map['pays']= pays;
-      map['ville']= ville;
-      map['quartier']= quartier;
       map['contact']= contact;
-      map['representantId']=representantId;
       final response4 = await http.post(ROOTLOCALISATION,body:map);
       print('Voici le message du body AddUser: ${response4.body}');
       if(200 == response4.statusCode){
@@ -643,38 +689,35 @@ class Etageservices{
   }
 
 }
-
-class CodePaysservices{
+class SoldeServices{
   static const ROOT ='https://afriqueimmobilier.net/immo/localisation.php';
-  static const _GET_QUARTIER_ACTION= 'GET_CODEPAYS';
+  static const _GET_QUARTIER_ACTION= 'GET_SOLDE';
 
-  static Future<List<codePays>> getCode() async {
+  static Future<List<Solde>> getSolde() async {
     try{
       var map= Map<String, dynamic>();
       map['action']= _GET_QUARTIER_ACTION;
 
       final response = await http.post(ROOT,body:map);
-      print('Voici le message du body getQuartier: ${response.body}');
+      print('Voici le message du body getSolde: ${response.body}');
       if(200 == response.statusCode){
-        List<codePays> list = parseResponse(response.body);
+        List<Solde> list = parseResponse(response.body);
         return list;
       }else{
-        return List<codePays>();
+        return List<Solde>();
       }
     }
     catch(e){
 
-      return List<codePays>();
+      return List<Solde>();
     }
   }
-  static List<codePays> parseResponse(String responseBody){
+  static List<Solde> parseResponse(String responseBody){
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-    return parsed.map<codePays>((json) => codePays.fromJson(json)).toList();
+    return parsed.map<Solde>((json) => Solde.fromJson(json)).toList();
   }
 
 }
-
-
 class Situationservices{
   static const ROOT ='https://afriqueimmobilier.net/immo/localisation.php';
   static const _GET_QUARTIER_ACTION= 'GET_SITUATION';
@@ -707,7 +750,7 @@ class Situationservices{
 
 
 class Usersnotifications {
-  static const ROOT = 'https://afriqueimmobilier.net/immo/validations.php';
+  static const ROOT = 'https://afriqueimmobilier.net/immo/annonceRequetes.php';
   static Future<List<User>> getUser(String representantId) async {
     try {
       var map = Map<String, dynamic>();
@@ -732,14 +775,16 @@ class Usersnotifications {
     return parsed.map<User>((json) => User.fromJson(json)).toList();
   }
 
-  static Future<String> updateCompte(String id,String actif) async{
+  static Future<String> updateCompte(String id,String pseudo,String email,String contact) async{
     try{
       var map= Map<String, dynamic>();
-      map['action']= 'VALID';
+      map['action']= 'PROFIL_UPDATE';
       map['id']= id;
-      map['actif']= actif;
+      map['pseudo']=pseudo;
+      map['email']=email;
+      map['contact']=contact;
       final response = await http.post(ROOT,body:map);
-      print('Voici le message du body updateProduit: ${response.body}');
+      print('Voici le message du body updateProfil: ${response.body}');
       if(200 == response.statusCode){
         return response.body;
       }else{

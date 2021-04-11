@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:immo_manager/appbar.dart';
-import 'package:immo_manager/constants.dart';
+import 'package:immo_manager/constantes/constants.dart';
 import 'package:immo_manager/models/Annonces.dart';
-import 'package:immo_manager/navigationDrawer.dart';
 import 'package:immo_manager/services/Services.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'dart:io';
@@ -88,6 +86,7 @@ class _VenteState extends State<Vente> {
   ImageUploadModel imageUpload2 = new ImageUploadModel();
   ImageUploadModel imageUpload3 = new ImageUploadModel();
   ImageUploadModel imageUpload4 = new ImageUploadModel();
+
   _getMandat() {
     setState(() {
       _mandat = mandat;
@@ -268,7 +267,6 @@ class _VenteState extends State<Vente> {
     DescriptifController="";
     nbetageController="";
     intituleController="";
-
     _getVille();
     _getPays();
     _getQuartier();
@@ -309,8 +307,24 @@ class _VenteState extends State<Vente> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer:navigationDrawer(),
-      appBar: buildAppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: (){
+            Navigator.pop(context);
+          },
+        ),
+        iconTheme: new IconThemeData(color: kPrimaryColor),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        title: Image.asset(
+          'assets/wimmo.jpg',
+          fit: BoxFit.contain,
+          height: 400,
+          width: 190,
+        ),
+        centerTitle: true,
+      ),
       body:Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
@@ -438,8 +452,9 @@ class _VenteState extends State<Vente> {
                           value: _paysselected.isNotEmpty ? _paysselected : null,
                           onChanged: (String newValue) {
                             setState(() {
-                              int index = int.parse(newValue);
-                              paysController = _pays[index - 1].intitulepays;
+                              _pays = pays.where((element) =>
+                              (element.codepays==newValue)).toList();
+                              paysController = _pays[0].intitulepays;
                               _paysselected = newValue;
                               filtreVille = _ville.where((element) =>
                               (element.codepays.toLowerCase().contains(
@@ -448,7 +463,7 @@ class _VenteState extends State<Vente> {
                             });
                             print("Pays du bien: "+paysController);
                           },
-                          items: _pays.map((Pays map) {
+                          items: pays.map((Pays map) {
                             return new DropdownMenuItem(
                               value: map.codepays,
                               child: Text(map.intitulepays),
@@ -716,7 +731,7 @@ class _VenteState extends State<Vente> {
                 child: FlatButton(
                   onPressed: (){
                     if (_formKey.currentState.validate()) {
-                      _onLoading();
+                        _onLoading();
                     }
                   },
                   child: Text("PUBLIER",
@@ -1271,6 +1286,7 @@ class _VenteState extends State<Vente> {
         )
     );
   }
+
   void _showMessageInScaffold(String message) {
     try {
       _scaffoldKey.currentState.showSnackBar(

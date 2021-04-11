@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:immo_manager/constants.dart';
+import 'package:immo_manager/constantes/constants.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:immo_manager/services/Services.dart';
-import 'package:immo_manager/DataTables.dart';
 class Notifications extends StatefulWidget {
   String title="Notifications";
   User user;
@@ -104,19 +103,6 @@ class _NotificationsState extends State<Notifications> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      _user[index].quartier !=null? _user[index].quartier+"," :'Connexion impossible',
-                                      style: TextStyle(
-                                        color: kTextLigthtColor,
-                                      ),
-                                    ),
-                                      SizedBox(width: 5.0,),
-                                    Text(
-                                      _user[index].ville !=null? _user[index].ville+"-" :'Connexion impossible',
-                                      style: TextStyle(
-                                        color: kTextLigthtColor,
-                                      ),
-                                    ),
-                                    Text(
                                       _user[index].pays!=null? _user[index].pays:'Connexion impossible...',
                                       style: TextStyle(
                                           color: kTextLigthtColor,
@@ -131,25 +117,11 @@ class _NotificationsState extends State<Notifications> {
                              IconButton(
                                  icon: Icon(Icons.clear,color: Colors.red,),
                                  onPressed: (){
-                                   Usersnotifications.updateCompte(_user[index].id,"rejeter").then((resultat){
-                                     if("Succès"==resultat) {
-                                       _onLoading();
-                                     }
-                                     else{
 
-                                     }
-                                   } );
                                  }),
                              IconButton(
                                  icon: Icon(Icons.check,color: Colors.green,), onPressed: (){
-                               Usersnotifications.updateCompte(_user[index].id,"oui").then((resultat){
-                                 if("Succès"==resultat) {
-                                   _onLoading();
-                                 }
-                                 else{
 
-                                 }
-                               } );
                              }),
                            ],
                          )

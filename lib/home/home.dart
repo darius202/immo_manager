@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:immo_manager/appbar.dart';
-import 'package:immo_manager/constants.dart';
-import 'package:immo_manager/location.dart';
+import 'package:immo_manager/appbar/appbar.dart';
+import 'package:immo_manager/constantes/constants.dart';
+import 'package:immo_manager/constantes/transition.dart';
+import 'package:immo_manager/drawer/navigationDrawer.dart';
+import 'package:immo_manager/experience/location.dart';
+import 'package:immo_manager/experience/vente.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:immo_manager/services/Services.dart';
-import 'package:immo_manager/transition.dart';
-import 'package:immo_manager/vente.dart';
-import 'package:immo_manager/navigationDrawer.dart';
 class Home extends StatefulWidget {
 
   @override
@@ -15,6 +15,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
+  DateTime abonne=new DateTime.now();
+  DateTime today = new DateTime.now();
   _getAnnonce(){
     annoncesService.getProduit(user[0].id).then((annonce){
       setState(() {
@@ -23,23 +25,42 @@ class _HomeState extends State<Home> {
       });
     } );
   }
+  _getAbonnement(){
+    annoncesService.getPaiement(user[0].id).then((annonce){
+      setState(() {
+        filtreAbonne=annonce;
+      });
+    } );
+  }
+  verifications(){
+    if(filtreAbonne.length!=0) {
+      for (int i = 0; i < filtreAbonne.length; i++) {
+        abonne= DateTime.parse(filtreAbonne[i].fin);
+      }
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _getAnnonce();
+    _getAbonnement();
+    verifications();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer:navigationDrawer(),
         appBar: buildAppBar(),
         body: SingleChildScrollView(
           child: Column(
             children: [
               GestureDetector(
                 onTap: (){
-                  Navigator.push(context, SlideRightRoute(page: Vente()));
+                  if(today.isAfter(abonne)){
+                    SoldeInsuffisant();
+                  }else{
+                    Navigator.push(context, SlideRightRoute(page: Vente()));
+                  }
                 },
                 child: Container(
                   padding: EdgeInsets.all(20.0),
@@ -68,7 +89,11 @@ class _HomeState extends State<Home> {
 
               GestureDetector(
                 onTap: (){
-                  Navigator.push(context, SlideRightRoute(page: Location()));
+                  if(today.isAfter(abonne)){
+                    SoldeInsuffisant();
+                  }else{
+                    Navigator.push(context, SlideRightRoute(page: Location()));
+                  }
                 },
                 child: Container(
                   padding: EdgeInsets.all(20.0),
@@ -96,6 +121,30 @@ class _HomeState extends State<Home> {
               ),
             ],
           ),
+        )
+    );
+  }
+  Future<Null> SoldeInsuffisant() async {
+    return (
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return new AlertDialog(
+                title: new Text("Aucun abonnement",style: TextStyle(color:Colors.red),),
+                content: new Text("Vous n'avez aucun abonnement en cours pour faire une publication"),
+                contentPadding: EdgeInsets.all(5.0),
+                actions: <Widget>[
+                  new FlatButton(onPressed: () {
+                    setState(() {
+                      Navigator.pop(context);
+                    });
+                  },
+                      child: new Text("OK",style: TextStyle(color: kPrimaryColor),)
+                  ),
+                ],
+              );
+            }
         )
     );
   }

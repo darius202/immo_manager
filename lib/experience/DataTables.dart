@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:immo_manager/constants.dart';
+import 'package:immo_manager/constantes/constants.dart';
+import 'package:immo_manager/experience/databody.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:immo_manager/pageValidator.dart';
-import 'package:immo_manager/databody.dart';
 import 'package:immo_manager/services/Services.dart';
-import 'package:immo_manager/suggestion.dart';
 class DataTables extends StatefulWidget{
   String title="Mes annonces";
   User user;
@@ -82,16 +81,11 @@ class _DataTables extends State<DataTables>{
       resizeToAvoidBottomInset: false,
       key: _scaffoldkey,
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: (){
-            Navigator.pop(context);
-          },
-        ),
+        leading: Text(""),
         backgroundColor: kPrimaryColor,
         elevation: 2.0,
         //centerTitle: true,
-        title: Text(_titreProgress,style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.bold)),
+        title: Text(_titreProgress,style: TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.bold)),
         actions: <Widget>[
           widget.user.admini=="oui"? IconButton(icon: Icon(Icons.notifications,size: 30,),
               onPressed: (){

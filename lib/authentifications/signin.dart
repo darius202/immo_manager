@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:immo_manager/constants.dart';
+import 'package:immo_manager/authentifications/login.dart';
+import 'package:immo_manager/constantes/constants.dart';
+import 'package:immo_manager/constantes/transition.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:immo_manager/services/Services.dart';
-import 'package:immo_manager/transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:immo_manager/login.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class Sigin extends StatefulWidget{
   @override
@@ -19,9 +20,7 @@ class _Sigin extends State<Sigin> {
   TextEditingController mailcontroller;
   TextEditingController passcontroller;
   TextEditingController payscontroller;
-  TextEditingController villecontroller;
-  TextEditingController quartiercontroller;
-  TextEditingController representantcontroller;
+  TextEditingController contactcontroller;
   String message = '';
 
   List <String> preferences=List();
@@ -29,14 +28,9 @@ class _Sigin extends State<Sigin> {
 
   List <Pays> _pays= List();
   String _paysselected="";
-  List <Ville> _ville=[];
-  String _villeselected="";
-  List <Ville> filtreVille= [];
+  String codepays="";
   String invalide="";
 
-  List <Quartier> _quartier= [];
-  List <Quartier> filtreQuartier= [];
-  String _quartierselected="";
 
   @override
   void initState() {
@@ -46,13 +40,9 @@ class _Sigin extends State<Sigin> {
     mailcontroller = TextEditingController();
     passcontroller = TextEditingController();
     payscontroller = TextEditingController();
-    villecontroller = TextEditingController();
-    quartiercontroller = TextEditingController();
-    representantcontroller = TextEditingController();
+    contactcontroller= TextEditingController();
 
-    _getVille();
     _getPays();
-    _getQuartier();
   }
 
   Future<void> _handleSubmit(BuildContext context) async {
@@ -64,12 +54,6 @@ class _Sigin extends State<Sigin> {
     }
   }
 
-  _getVille(){
-    setState(() {
-      _ville=ville;
-      filtreVille = ville;
-    });
-  }
   _getPays(){
     setState(() {
       _pays =pays;
@@ -77,12 +61,6 @@ class _Sigin extends State<Sigin> {
   }
   final String emailPattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-  _getQuartier(){
-    setState(() {
-      _quartier= quartier;
-      filtreQuartier=quartier;
-    });
-  }
 
   Future<bool> SavePreferenceemail(String email) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -101,10 +79,8 @@ class _Sigin extends State<Sigin> {
         mailcontroller.text,
         passcontroller.text,
         payscontroller.text,
-        villecontroller.text,
-        quartiercontroller.text,
-        contactcode+contactcontroller.text,
-        representantcontroller.text).then((value) {
+        contactcontroller.text
+        ).then((value) {
       if ('1' == value) {
         Navigator.pop(context);
         SavePass();
@@ -208,6 +184,8 @@ class _Sigin extends State<Sigin> {
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Entrer un mot de passe';
+                        }else if(value.length<6){
+                          return'Entrer au moins 06 caractères';
                         }
                         return null;
                       },
@@ -258,14 +236,14 @@ class _Sigin extends State<Sigin> {
                                 value: _paysselected.isNotEmpty ? _paysselected : null,
                                 onChanged: (String newValue){
                                   setState(() {
-                                    int index =int.parse(newValue);
-                                    payscontroller.text=_pays[index-1].intitulepays;
+
+                                  //  int index =int.parse();
+                                    _pays = pays.where((element) =>
+                                        (element.codepays==newValue)).toList();
+                                    payscontroller.text=_pays[0].intitulepays;
+                                    codepays=_pays[0].indicatif;
                                     _paysselected=newValue;
-                                    _villeselected ="";
-                                    _quartierselected="";
-                                    filtreVille = _ville.where((element) =>
-                                    (element.codepays.toLowerCase().contains(newValue.toLowerCase()))
-                                    ).toList();
+                                    print("Intitulé: "+_paysselected);
                                   });
                                 },
                                 items: _pays.map((Pays map){
@@ -284,106 +262,30 @@ class _Sigin extends State<Sigin> {
                   ),
                   SizedBox(height: 5,),
                   Container(
-                    padding: EdgeInsets.only(left:40.0,right: 40.0),
-                    child: FormField(
-                      builder: (FormFieldState state) {
-                        return InputDecorator(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            hintText: "Ville",
-                            hintStyle: TextStyle(color: Colors.grey),
-                          ),
-                          isEmpty: _villeselected == '',
-                          child: new DropdownButtonHideUnderline(
-                            child:ButtonTheme(
-                              alignedDropdown: true,
-                              child: DropdownButton(
-                                isDense: true,
-                                value: _villeselected.isNotEmpty ? _villeselected : null,
-                                onChanged: (String newValue){
-                                  setState(() {
-                                    if(_paysselected!=""){
-                                      _quartierselected ="";
-                                      _villeselected=newValue;
-                                      int index= int.parse(newValue);
-                                      villecontroller.text = _ville[index-1].intituleville;
-                                      representantcontroller.text=_ville[index-1].representantId;
-
-                                      filtreQuartier = _quartier.where((element) =>
-                                      (element.codeville.toLowerCase().contains(newValue.toLowerCase()))
-                                      ).toList();
-                                    }else{
-                                      _villeselected="";
-                                      _quartierselected="";
-                                    }
-
-                                  });
-                                },
-                                items: filtreVille.map((Ville map){
-                                  return new DropdownMenuItem(
-                                    value: map.codeville,
-                                    child: Text(map.intituleville),
-                                  );
-                                }
-                                ).toList(),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 5,),
-                  Container(
                     width: MediaQuery
                         .of(context)
                         .size
                         .width / 1.1,
-                    padding: EdgeInsets.only(left: 20.0,right: 20.0),
-                    child: FormField(
-                      builder: (FormFieldState state) {
-                        return InputDecorator(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            hintText: "Quartier",
-                            hintStyle: TextStyle(color: Colors.grey),
-                          ),
-                          isEmpty: _quartierselected == '',
-                          child: new DropdownButtonHideUnderline(
-                            child:ButtonTheme(
-                              alignedDropdown: true,
-                              child: DropdownButton(
-                                isDense: true,
-                                value: _quartierselected.isNotEmpty ? _quartierselected : null,
-                                onChanged: (String newValue){
-                                  setState(() {
-                                    if(_villeselected!=""){
-                                      _quartierselected=newValue;
-                                      int index=int.parse(newValue);
-                                      quartiercontroller.text= _quartier[index-1].intitulequartier;
-                                    }else{
-                                      _villeselected="";
-                                    }
-                                  });
-                                },
-                                items: filtreQuartier.map((Quartier map){
-                                  return new DropdownMenuItem(
-                                    value: map.codequartier,
-                                    child: Text(map.intitulequartier),
-                                  );
-                                }
-                                ).toList(),
-                              ),
-                            ),
-                          ),
-                        );
+                    padding: EdgeInsets.only(top:20.0,left:20.0,right: 20.0),
+                    child: TextFormField(
+                      controller: contactcontroller,
+                      autocorrect: true,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        hintText:  "Entrer votre contact",
+                        hintStyle: TextStyle(color: Colors.grey),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Entrer votre contact ';
+                        }
+                        return null;
                       },
                     ),
                   ),
-                  SizedBox(height: 5,),
-                  PhoneWidget(),
+                  SizedBox(height: 20,),
                   Container(
                     width: MediaQuery
                         .of(context)
@@ -397,6 +299,8 @@ class _Sigin extends State<Sigin> {
                         setState(() {
                           message="";
                           if (_formKey.currentState.validate()) {
+                            codepays+=contactcontroller.text;
+                            contactcontroller.text=codepays;
                             _onLoading();
                           }
                         });
@@ -493,91 +397,6 @@ class _Sigin extends State<Sigin> {
     SavePreferencepass(pass);
   }
 }
-
-class PhoneWidget extends StatefulWidget {
-  @override
-  _PhoneWidgetState createState() => _PhoneWidgetState();
-}
-
-class _PhoneWidgetState extends State<PhoneWidget> {
-  String _selectedCountryCode;
-  List<codePays> _countryCodes= List();
-
-  _getCode(){
-    setState(() {
-      _countryCodes=code;
-    });
-  }
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _getCode();
-  }
-  @override
-  Widget build(BuildContext context) {
-    var countryDropDown = Container(
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          right: BorderSide(width: 0.5, color: Colors.grey),
-        ),
-      ),
-      height: 45.0,
-      margin: const EdgeInsets.all(3.0),
-      //width: 300.0,
-      child: DropdownButtonHideUnderline(
-        child: ButtonTheme(
-          alignedDropdown: true,
-          child: DropdownButton(
-            hint: Text("Code",style: TextStyle(fontSize: 14,color: Colors.grey),),
-            value: _selectedCountryCode,
-            items: _countryCodes.map((codePays value) {
-              return new DropdownMenuItem<String>(
-                  value: value.code,
-                  child: new Text(
-                    value.code,
-                    style: TextStyle(fontSize: 12.0),
-                  ));
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                _selectedCountryCode = value;
-                contactcode=value;
-              });
-            },
-            style: Theme.of(context).textTheme.title,
-          ),
-        ),
-      ),
-    );
-    return Container(
-      width: double.infinity,
-      margin: new EdgeInsets.only(left: 40.0, bottom: 20.0, right: 40.0),
-      color: Colors.white,
-      child: new TextFormField(
-        key: _formKey2,
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Veuillez entrer votre contact';
-          }
-        },
-        keyboardType: TextInputType.number,
-        controller: contactcontroller,
-        decoration: new InputDecoration(
-            contentPadding: const EdgeInsets.all(14.0),
-            fillColor: Colors.white,
-            prefixIcon: countryDropDown,
-            hintText: ' Numéro',
-            hintStyle: TextStyle(color: Colors.grey)
-        ),
-      ),
-    );
-  }
-}
-TextEditingController contactcontroller=TextEditingController();
-String contactcode="";
-final _formKey2 = GlobalKey<FormState>();
 
 class Dialogs {
   static Future<void> showLoadingDialog(

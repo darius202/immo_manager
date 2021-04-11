@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:immo_manager/constants.dart';
 class Connector extends StatefulWidget {
 
   @override
@@ -12,9 +11,6 @@ class _ConnectorState extends State<Connector> {
     return Scaffold(
 
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.menu, color: kPrimaryColor,),
-        ),
         backgroundColor: Colors.white,
         elevation: 0,
         title: Image.asset(
@@ -27,6 +23,7 @@ class _ConnectorState extends State<Connector> {
       ),
       body: Scaffold(
         appBar: AppBar(
+          leading:Text(""),
           title: Text("Page non trouvée"),
           centerTitle: true,
           backgroundColor: Color(0xFF184098),

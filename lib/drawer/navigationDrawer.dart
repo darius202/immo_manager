@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:immo_manager/DataTables.dart';
-import 'package:immo_manager/conditions.dart';
-import 'package:immo_manager/createDrawerBodyItem.dart';
-import 'package:immo_manager/createDrawerHeader.dart';
-import 'package:immo_manager/home.dart';
+import 'package:immo_manager/abonnement/abonnement.dart';
+import 'package:immo_manager/constantes/transition.dart';
+import 'package:immo_manager/drawer/createDrawerHeader.dart';
+import 'package:immo_manager/experience/DataTables.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:immo_manager/pageValidator.dart';
-import 'package:immo_manager/profil.dart';
-import 'package:immo_manager/transition.dart';
+import 'package:immo_manager/profil/profil.dart';
+import 'package:immo_manager/userconditions/conditions.dart';
+import 'createDrawerBodyItem.dart';
 
 class navigationDrawer extends StatelessWidget {
   @override
@@ -18,21 +18,19 @@ class navigationDrawer extends StatelessWidget {
         children: <Widget>[
           createDrawerHeader(),
           createDrawerBodyItem(
-            icon: Icons.home,
-            text: 'Acceuil',
-            onTap: () {
-              Navigator.push(context, SlideRightRoute(page: Home()));
-            }
-
-          ),
-          createDrawerBodyItem(
               icon: Icons.person,
               text: 'Mon profil',
               onTap: () {
                 Navigator.push(context, SlideRightRoute(page: ProfilePage()));
               }
           ),
-
+          createDrawerBodyItem(
+              icon: Icons.attach_money,
+              text: 'Dépôt',
+              onTap: () {
+                Navigator.push(context, SlideRightRoute(page: Abonnement()));
+              }
+          ),
           createDrawerBodyItem(
               icon: Icons.reply_all,
               text: 'Mes annonces',

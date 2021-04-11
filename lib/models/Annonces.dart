@@ -99,15 +99,13 @@ class User{
   String email;
   String mot_de_passe;
   String pays;
-  String ville;
-  String quartier;
   String contact;
   String admini;
   String actif;
-  String representantId;
   String date_inscrit;
+  String solde;
 
-  User({this.id,this.pseudo,this.email,this.mot_de_passe,this.pays,this.ville,this.quartier,this.contact,this.admini,this.actif,this.representantId,this.date_inscrit});
+  User({this.id,this.pseudo,this.email,this.mot_de_passe,this.pays,this.contact,this.admini,this.actif,this.date_inscrit,this.solde});
   factory User.fromJson(Map<String, dynamic> json){
     return User(
       id:json['id'] as String,
@@ -115,13 +113,11 @@ class User{
       email: json['email'] as String,
       mot_de_passe: json['mot_de_passe'] as String,
       pays: json['pays'] as String,
-      ville:json['ville'] as String,
-      quartier: json['quartier'] as String,
       contact: json['contact'] as String,
       admini: json['admini'] as String,
-      actif: json['actif'] as String,
-        representantId:json['representantId'] as String,
-        date_inscrit:json['date_inscrit'] as String
+        actif: json['actif'] as String,
+        date_inscrit:json['date_inscrit'] as String,
+      solde: json['solde'] as String
     );
   }
 }
@@ -146,22 +142,24 @@ class Ville{
     );
   }
 }
-
-class codePays{
+class AbonnementCour{
   String id;
-  String idPays;
-  String code;
-  codePays({this.id,this.idPays,this.code});
-  factory codePays.fromJson(Map<String, dynamic> json){
-    return codePays(
-      id:json['id'] as String,
-      idPays:json['idPays'] as String,
-      code:json['code'] as String,
+  String debut;
+  String montant;
+  String fin;
+  String idadmin;
+  AbonnementCour({this.id,this.debut,this.fin,this.montant,this.idadmin});
+  factory AbonnementCour.fromJson(Map<String, dynamic> json) {
+    return AbonnementCour(
+      id: json['id'] as String,
+      debut: json['debut'] as String,
+      fin: json['fin'] as String,
+      montant: json['montant'] as String,
+      idadmin: json['idadmin'] as String,
     );
   }
 }
 class Quartier{
-
   String  codequartier;
   String codeville;
   String codepays;
@@ -184,14 +182,24 @@ class Quartier{
 
 class Pays {
   String codepays;
+  String iso;
+  String nice;
   String intitulepays;
+  String iso3;
+  String numcode;
+  String indicatif;
 
-  Pays({this.codepays, this.intitulepays});
+  Pays({this.codepays, this.intitulepays,this.iso,this.iso3,this.indicatif,this.nice,this.numcode});
 
   factory Pays.fromJson(Map<String, dynamic> json) {
     return Pays(
       codepays: json['codepays'] as String,
       intitulepays: json['intitulepays'] as String,
+      iso3:  json['iso3'] as String,
+      iso:  json['iso'] as String,
+      numcode:  json['numcode'] as String,
+      nice:  json['nice'] as String,
+      indicatif:  json['indicatif'] as String,
     );
   }
 }
@@ -248,13 +256,26 @@ class Situationadmin {
     );
   }
 }
+class Solde{
+  String id;
+  String montant;
+  Solde({this.id,this.montant});
+  factory Solde.fromJson(Map<String, dynamic> json){
+    return Solde(
+      id:json['id'] as String,
+      montant:json['montant'] as String,
+    );
+  }
+}
 
 List <Situationadmin> situation= List();
 List <User> user= List();
 List <Pays> pays=List();
+List<AbonnementCour> abonnes=List();
+List<AbonnementCour> filtreAbonne=List();
 List <Ville> ville=List();
 List <Quartier> quartier=List();
 List <Mandat> mandat=List();
 List <Etage> etage=List();
-List <codePays> code=List();
 List <Bienlouable> louable=List();
+List <Solde> paiement=List();

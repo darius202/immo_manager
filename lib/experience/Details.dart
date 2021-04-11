@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:immo_manager/constants.dart';
+import 'package:immo_manager/constantes/constants.dart';
 import 'package:immo_manager/services/Services.dart';
 import 'package:immo_manager/models/Annonces.dart';
 import 'package:image_picker/image_picker.dart';
